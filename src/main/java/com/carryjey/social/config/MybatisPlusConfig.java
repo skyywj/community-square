@@ -18,7 +18,7 @@ import javax.sql.DataSource;
  * Created by tomoya. Copyright (c) 2018, All Rights Reserved. https://yiiu.co
  */
 @Configuration
-@MapperScan("co.yiiu.pybbs.mapper")
+@MapperScan("com.carryjey.social.mapper")
 public class MybatisPlusConfig {
 
     // 配置分页插件
