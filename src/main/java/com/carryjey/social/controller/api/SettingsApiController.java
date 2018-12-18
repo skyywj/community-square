@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
-
 /**
- * Created by tomoya. Copyright (c) 2018, All Rights Reserved. https://yiiu.co
+ * @author yanwenjie
+ * @since 2018/12/17
  */
 @RestController
 @RequestMapping("/api/settings")
@@ -115,10 +115,12 @@ public class SettingsApiController extends BaseApiController {
         User user = userService.selectById(getUser().getId());
         user.setAvatar(url);
         // 保存用户新的头像
-        userService.update(user);
+        userService.updateAvatar(user);
         // 将最新的用户信息更新在session里
         if (session != null) {
+            session.removeAttribute("_user");
             session.setAttribute("_user", user);
+            System.out.print(session.getAttribute("_user"));
         }
         return success(url);
     }

@@ -330,7 +330,7 @@ VALUES
 	(18, 'staticUrl', 'http://localhost:8080/static/upload/', '静态文件访问地址，主要用于上传图片的访问，注意最后有个\"/\"', 23),
 	(19, 'upCommentScore', '3', '点赞评论奖励评论作者的积分', 26),
 	(20, 'uploadAvatarSizeLimit', '2', '上传头像文件大小，单位MB，默认2MB', 25),
-	(21, 'uploadPath', '/Users/hh/git/github/pybbs/static/upload/', '上传文件的路径，注意最后有个\"/\"', 25),
+	(21, 'uploadPath', '/Users/a/Desktop/pics/community-square/static/upload/', '上传文件的路径，注意最后有个\"/\"', 25),
 	(22, 'upTopicScore', '3', '点赞话题奖励话题作者的积分', 26),
 	(23, NULL, NULL, '基础配置', 0),
 	(24, NULL, NULL, '邮箱配置', 0),

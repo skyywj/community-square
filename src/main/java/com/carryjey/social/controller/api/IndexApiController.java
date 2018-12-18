@@ -16,7 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpSession;
 
 /**
- * Created by tomoya. Copyright (c) 2018, All Rights Reserved. https://yiiu.co
+ * @author CarryJey
+ * @since 2018/12/18
  */
 @RestController
 @RequestMapping("/api")

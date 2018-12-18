@@ -1,7 +1,8 @@
 package com.carryjey.social.model;
 
 /**
- * Created by tomoya. Copyright (c) 2018, All Rights Reserved. https://yiiu.co
+ * @author CarryJey
+ * @since 2018/12/18
  */
 public class RolePermission {
 

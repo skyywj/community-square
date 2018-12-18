@@ -15,7 +15,8 @@ import org.springframework.context.annotation.Configuration;
 import javax.sql.DataSource;
 
 /**
- * Created by tomoya. Copyright (c) 2018, All Rights Reserved. https://yiiu.co
+ * @author CarryJey
+ * @since 2018/12/18
  */
 @Configuration
 @MapperScan("com.carryjey.social.mapper")

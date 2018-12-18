@@ -18,7 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * Created by tomoya. Copyright (c) 2018, All Rights Reserved. https://yiiu.co
+ * @author CarryJey
+ * @since 2018/12/18
  */
 @Controller
 @RequestMapping("/admin/tag")

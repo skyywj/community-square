@@ -3,6 +3,7 @@ package com.carryjey.social.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.carryjey.social.Dao.UserDao;
 import com.carryjey.social.mapper.UserMapper;
 import com.carryjey.social.model.User;
 import com.carryjey.social.util.bcrypt.BCryptPasswordEncoder;
@@ -16,7 +17,8 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Created by tomoya. Copyright (c) 2018, All Rights Reserved. https://yiiu.co
+ * @author CarryJey
+ * @since 2018/12/17
  */
 @Service
 @Transactional
@@ -42,6 +44,9 @@ public class UserService {
 
     @Autowired
     private SystemConfigService systemConfigService;
+
+    @Autowired
+    private UserDao userDao;
 
     // 根据用户名查询用户，用于获取用户的信息比对密码
     public User selectByUsername(String username) {
@@ -98,6 +103,9 @@ public class UserService {
         userMapper.updateById(user);
     }
 
+    public void updateAvatar(User user) {
+        userDao.updateAvater(user);
+    }
     // ------------------------------- admin ------------------------------------------
 
     public IPage<User> selectAll(Integer pageNo) {

@@ -14,7 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Created by tomoya. Copyright (c) 2016, All Rights Reserved. https://yiiu.co
+ * @author CarryJey
+ * @since 2018/12/18
  */
 @ControllerAdvice
 public class GlobalExceptionHandler {

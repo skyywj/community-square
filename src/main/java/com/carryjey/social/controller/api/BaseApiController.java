@@ -4,7 +4,8 @@ import com.carryjey.social.controller.front.BaseController;
 import com.carryjey.social.util.Result;
 
 /**
- * Created by tomoya. Copyright (c) 2018, All Rights Reserved. https://yiiu.co
+ * @author CarryJey
+ * @since 2018/12/18
  */
 public class BaseApiController extends BaseController {
 

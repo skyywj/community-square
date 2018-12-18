@@ -8,7 +8,8 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Created by tomoya. Copyright (c) 2018, All Rights Reserved. https://yiiu.co
+ * @author yanwenjie
+ * @since 2018/12/17
  */
 public class User implements Serializable {
 
