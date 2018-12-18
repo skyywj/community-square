@@ -17,7 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.Date;
 
 /**
- * Created by tomoya. Copyright (c) 2018, All Rights Reserved. https://yiiu.co
+ * @author CarryJey
+ * @since 2018/12/18
  */
 @Controller
 @RequestMapping("/admin/admin_user")

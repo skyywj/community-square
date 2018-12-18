@@ -8,7 +8,8 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Created by tomoya. Copyright (c) 2018, All Rights Reserved. https://yiiu.co
+ * @author CarryJey
+ * @since 2018/12/18
  */
 public class Notification implements Serializable {
     private static final long serialVersionUID = 3235461023789820336L;

@@ -6,7 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 
 /**
- * Created by tomoya. Copyright (c) 2018, All Rights Reserved. https://yiiu.co
+ * @author CarryJey
+ * @since 2018/12/18
  */
 public class Tag implements Serializable {
     private static final long serialVersionUID = 3257790983905872243L;

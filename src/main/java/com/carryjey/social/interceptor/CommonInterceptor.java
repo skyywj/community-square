@@ -18,7 +18,8 @@ import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 /**
- * Created by tomoya. Copyright (c) 2018, All Rights Reserved. https://yiiu.co
+ * @author CarryJey
+ * @since 2018/12/18
  */
 @Component
 public class CommonInterceptor implements HandlerInterceptor {

@@ -6,8 +6,21 @@
 - Bootstrap
 - MySQL
 
-## 运行
+## 数据库初始化
+1、创建名为community-square的数据库
 
-**注意：运行前要先创建数据库，数据库名community-square, 还要同步修改一下 application.yml 里的数据库连接配置**
+2、修改 application.yml 里的数据库连接配置
 
-**数据库创建好之后，把根目录下的 community-square.sql 脚本导入到创建好的community-square库里**
+3、修改community-square.sql相关信息
+
+（1）修改redis连接信息：本地host：127.0.0.1，密码建议自己给redis配上
+
+（2）修改文件上传位置信息
+
+（3）修改其他配置信息
+
+4、在community-square数据库执行sql脚本，创建数据表
+
+
+
+

@@ -16,7 +16,8 @@ import javax.servlet.http.HttpSession;
 import java.util.Set;
 
 /**
- * Created by tomoya. Copyright (c) 2018, All Rights Reserved. https://yiiu.co
+ * @author CarryJey
+ * @since 2018/12/18
  */
 @RestController
 @RequestMapping("/api/topic")

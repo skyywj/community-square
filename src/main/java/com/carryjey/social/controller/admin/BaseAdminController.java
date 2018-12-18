@@ -14,7 +14,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Created by tomoya. Copyright (c) 2018, All Rights Reserved. https://yiiu.co
+ * @author CarryJey
+ * @since 2018/12/18
  */
 public class BaseAdminController extends BaseApiController {
 

@@ -16,7 +16,8 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerConfig;
 import javax.annotation.PostConstruct;
 
 /**
- * Created by tomoya. Copyright (c) 2018, All Rights Reserved. https://yiiu.co
+ * @author CarryJey
+ * @since 2018/12/18
  */
 @Configuration
 public class FreemarkerConfig {
