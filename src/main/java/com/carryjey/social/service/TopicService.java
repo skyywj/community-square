@@ -104,6 +104,10 @@ public class TopicService {
         topic.setContent(content);
         topic.setInTime(new Date());
         topic.setUserId(user.getUserId());
+        topic.setUserName(user.getUsername());
+        topic.setUserAvatar(user.getAvatar());
+        topic.setCreatedTime(System.currentTimeMillis());
+        topic.setUpdatedTime(System.currentTimeMillis());
         topicMapper.insert(topic);
         // 增加用户积分
         user.setScore(
