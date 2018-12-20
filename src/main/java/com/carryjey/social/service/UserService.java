@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -48,6 +47,8 @@ public class UserService {
     @Autowired
     private UserDao userDao;
 
+    private SnowflakeIdWorker snowflakeIdWorker = new IdService().createUserId();
+
     // 根据用户名查询用户，用于获取用户的信息比对密码
     public User selectByUsername(String username) {
         QueryWrapper<User> wrapper = new QueryWrapper<>();
@@ -68,17 +69,20 @@ public class UserService {
     }
 
     // 注册创建用户
-    public User addUser(String username, String password) {
+    public User addUser(String username, String password, String mail) {
         String token = this.generateToken();
         User user = new User();
+        user.setUserId(snowflakeIdWorker.nextId());
         user.setUsername(username);
         user.setPassword(new BCryptPasswordEncoder().encode(password));
         user.setToken(token);
-        user.setInTime(new Date());
         user.setAvatar(identicon.generator(username));
+        user.setEmail(mail);
+        user.setCreatedTime(System.currentTimeMillis());
+        user.setUpdatedTime(System.currentTimeMillis());
         userMapper.insert(user);
         // 再查一下，有些数据库里默认值保存后，类里还是null
-        return this.selectById(user.getId());
+        return this.selectByUserId(user.getUserId());
     }
 
     // 根据用户token查询用户
@@ -88,8 +92,8 @@ public class UserService {
         return userMapper.selectOne(wrapper);
     }
 
-    public User selectById(Integer id) {
-        return userMapper.selectById(id);
+    public User selectByUserId(long userId) {
+        return userDao.getByUserId(userId);
     }
 
     // 查询用户积分榜

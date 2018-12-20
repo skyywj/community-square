@@ -41,11 +41,11 @@ public class UserController extends BaseController {
         // 查询用户个人信息
         User user = userService.selectByUsername(username);
         // 查询用户的话题
-        IPage<Map<String, Object>> topics = topicService.selectByUserId(user.getId(), 1, 10);
+        IPage<Map<String, Object>> topics = topicService.selectByUserId(user.getUserId(), 1, 10);
         // 查询用户参与的评论
-        IPage<Map<String, Object>> comments = commentService.selectByUserId(user.getId(), 1, 10);
+        IPage<Map<String, Object>> comments = commentService.selectByUserId(user.getUserId(), 1, 10);
         // 查询用户收藏的话题数
-        Integer collectCount = collectService.countByUserId(user.getId());
+        Integer collectCount = collectService.countByUserId(user.getUserId());
 
         model.addAttribute("user", user);
         model.addAttribute("topics", topics);
@@ -59,7 +59,7 @@ public class UserController extends BaseController {
         // 查询用户个人信息
         User user = userService.selectByUsername(username);
         // 查询用户的话题
-        IPage<Map<String, Object>> topics = topicService.selectByUserId(user.getId(), pageNo, null);
+        IPage<Map<String, Object>> topics = topicService.selectByUserId(user.getUserId(), pageNo, null);
         model.addAttribute("user", user);
         model.addAttribute("topics", topics);
         return "front/user/topics";
@@ -71,7 +71,7 @@ public class UserController extends BaseController {
         // 查询用户个人信息
         User user = userService.selectByUsername(username);
         // 查询用户参与的评论
-        IPage<Map<String, Object>> comments = commentService.selectByUserId(user.getId(), pageNo, null);
+        IPage<Map<String, Object>> comments = commentService.selectByUserId(user.getUserId(), pageNo, null);
         model.addAttribute("user", user);
         model.addAttribute("comments", comments);
         return "front/user/comments";
@@ -83,7 +83,7 @@ public class UserController extends BaseController {
         // 查询用户个人信息
         User user = userService.selectByUsername(username);
         // 查询用户参与的评论
-        IPage<Map<String, Object>> collects = collectService.selectByUserId(user.getId(), pageNo, null);
+        IPage<Map<String, Object>> collects = collectService.selectByUserId(user.getUserId(), pageNo, null);
         model.addAttribute("user", user);
         model.addAttribute("collects", collects);
         return "front/user/collects";

@@ -58,7 +58,7 @@ public class CommentService {
     }
 
     // 根据用户id删除评论记录
-    public void deleteByUserId(Integer userId) {
+    public void deleteByUserId(long userId) {
         QueryWrapper<Comment> wrapper = new QueryWrapper<>();
         wrapper.lambda().eq(Comment::getUserId, userId);
         commentMapper.delete(wrapper);
@@ -71,7 +71,11 @@ public class CommentService {
         comment.setContent(content);
         comment.setInTime(new Date());
         comment.setTopicId(topic.getId());
-        comment.setUserId(user.getId());
+        comment.setUserId(user.getUserId());
+        comment.setUserName(user.getUsername());
+        comment.setUserAvatar(user.getAvatar());
+        comment.setCreatedTime(System.currentTimeMillis());
+        comment.setUpdatedTime(System.currentTimeMillis());
         commentMapper.insert(comment);
 
         // 话题的评论数+1
@@ -91,13 +95,14 @@ public class CommentService {
         // 给评论的作者发通知
         if (commentId != null) {
             Comment targetComment = this.selectById(commentId);
-            if (!user.getId().equals(targetComment.getUserId())) {
-                notificationService.insert(user.getId(), targetComment.getUserId(), topic.getId(), "REPLY", content);
+            if (user.getUserId() != targetComment.getUserId()) {
+                notificationService.insert(
+                    user.getUserId(), targetComment.getUserId(), topic.getId(), "REPLY", content);
             }
         }
         // 给话题作者发通知
-        if (!user.getId().equals(topic.getUserId())) {
-            notificationService.insert(user.getId(), topic.getUserId(), topic.getId(), "COMMENT", content);
+        if (user.getUserId() == topic.getUserId()) {
+            notificationService.insert(user.getUserId(), topic.getUserId(), topic.getId(), "COMMENT", content);
         }
 
         // 日志 TODO
@@ -121,11 +126,11 @@ public class CommentService {
         Set<String> strings = StringUtils.commaDelimitedListToSet(upIds);
         // 把新的点赞用户id添加进集合，这里用set，正好可以去重，如果集合里已经有用户的id了，那么这次动作被视为取消点赞
         Integer userScore = user.getScore();
-        if (strings.contains(String.valueOf(user.getId()))) { // 取消点赞行为
-            strings.remove(String.valueOf(user.getId()));
+        if (strings.contains(String.valueOf(user.getUserId()))) { // 取消点赞行为
+            strings.remove(String.valueOf(user.getUserId()));
             userScore -= Integer.parseInt(systemConfigService.selectAllConfig().get("upCommentScore").toString());
         } else { // 点赞行为
-            strings.add(String.valueOf(user.getId()));
+            strings.add(String.valueOf(user.getUserId()));
             userScore += Integer.parseInt(systemConfigService.selectAllConfig().get("upCommentScore").toString());
         }
         // 再把这些id按逗号隔开组成字符串
@@ -150,7 +155,7 @@ public class CommentService {
             topic.setCommentCount(topic.getCommentCount() - 1);
             topicService.update(topic);
             // 减去用户积分
-            User user = userService.selectById(comment.getUserId());
+            User user = userService.selectByUserId(comment.getUserId());
             user.setScore(
                 user.getScore()
                     - Integer.parseInt(systemConfigService.selectAllConfig().get("deleteCommentScore").toString()));
@@ -164,7 +169,7 @@ public class CommentService {
     }
 
     // 查询用户的评论
-    public IPage<Map<String, Object>> selectByUserId(Integer userId, Integer pageNo, Integer pageSize) {
+    public IPage<Map<String, Object>> selectByUserId(long userId, Integer pageNo, Integer pageSize) {
         IPage<Map<String, Object>> iPage =
             new Page<>(
                 pageNo,

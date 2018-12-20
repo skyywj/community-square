@@ -16,7 +16,7 @@ public interface CommentMapper extends BaseMapper<Comment> {
 
     List<Map<String, Object>> selectByTopicId(@Param("topicId") Integer topicId);
 
-    IPage<Map<String, Object>> selectByUserId(IPage<Map<String, Object>> iPage, @Param("userId") Integer userId);
+    IPage<Map<String, Object>> selectByUserId(IPage<Map<String, Object>> iPage, @Param("userId") long userId);
 
     IPage<Map<String, Object>> selectAllForAdmin(
         IPage<Map<String, Object>> iPage,

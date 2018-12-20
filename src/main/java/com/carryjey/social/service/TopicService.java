@@ -74,7 +74,7 @@ public class TopicService {
     }
 
     // 查询话题作者其它的话题
-    public List<Topic> selectAuthorOtherTopic(Integer userId, Integer topicId, Integer limit) {
+    public List<Topic> selectAuthorOtherTopic(long userId, Integer topicId, Integer limit) {
         QueryWrapper<Topic> wrapper = new QueryWrapper<>();
         wrapper.eq("user_id", userId).orderByDesc("in_time");
         if (topicId != null) {
@@ -87,7 +87,7 @@ public class TopicService {
     }
 
     // 查询用户的话题
-    public IPage<Map<String, Object>> selectByUserId(Integer userId, Integer pageNo, Integer pageSize) {
+    public IPage<Map<String, Object>> selectByUserId(long userId, Integer pageNo, Integer pageSize) {
         IPage<Map<String, Object>> iPage =
             new Page<>(
                 pageNo,
@@ -103,7 +103,7 @@ public class TopicService {
         topic.setTitle(Jsoup.clean(title, Whitelist.simpleText()));
         topic.setContent(content);
         topic.setInTime(new Date());
-        topic.setUserId(user.getId());
+        topic.setUserId(user.getUserId());
         topicMapper.insert(topic);
         // 增加用户积分
         user.setScore(
@@ -159,7 +159,7 @@ public class TopicService {
         // 删除相应的关联标签
         topicTagService.deleteByTopicId(id);
         // 减去用户积分
-        User user = userService.selectById(topic.getUserId());
+        User user = userService.selectByUserId(topic.getUserId());
         user.setScore(
             user.getScore()
                 - Integer.parseInt(systemConfigService.selectAllConfig().get("deleteTopicScore").toString()));
@@ -172,7 +172,7 @@ public class TopicService {
     }
 
     // 根据用户id删除帖子
-    public void deleteByUserId(Integer userId) {
+    public void deleteByUserId(long userId) {
         QueryWrapper<Topic> wrapper = new QueryWrapper<>();
         wrapper.lambda().eq(Topic::getUserId, userId);
         topicMapper.delete(wrapper);
@@ -193,11 +193,11 @@ public class TopicService {
         Set<String> strings = StringUtils.commaDelimitedListToSet(upIds);
         // 把新的点赞用户id添加进集合，这里用set，正好可以去重，如果集合里已经有用户的id了，那么这次动作被视为取消点赞
         Integer userScore = user.getScore();
-        if (strings.contains(String.valueOf(user.getId()))) { // 取消点赞行为
-            strings.remove(String.valueOf(user.getId()));
+        if (strings.contains(String.valueOf(user.getUserId()))) { // 取消点赞行为
+            strings.remove(String.valueOf(user.getUserId()));
             userScore -= Integer.parseInt(systemConfigService.selectAllConfig().get("upTopicScore").toString());
         } else { // 点赞行为
-            strings.add(String.valueOf(user.getId()));
+            strings.add(String.valueOf(user.getUserId()));
             userScore += Integer.parseInt(systemConfigService.selectAllConfig().get("upTopicScore").toString());
         }
         // 再把这些id按逗号隔开组成字符串

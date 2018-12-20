@@ -30,7 +30,7 @@ public class OtherTopicDirective implements TemplateDirectiveModel {
     public void execute(
         Environment environment, Map map, TemplateModel[] templateModels, TemplateDirectiveBody templateDirectiveBody)
         throws TemplateException, IOException {
-        Integer userId = Integer.parseInt(map.get("userId").toString());
+        long userId = Long.valueOf(map.get("userId").toString());
         Integer topicId = Integer.parseInt(map.get("topicId").toString());
         Integer limit = Integer.parseInt(map.get("limit").toString());
         List<Topic> topics = topicService.selectAuthorOtherTopic(userId, topicId, limit);

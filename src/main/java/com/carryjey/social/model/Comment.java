@@ -17,12 +17,16 @@ public class Comment implements Serializable {
     private Integer id;
 
     private Integer topicId;
-    private Integer userId;
+    private long userId;
+    private String userName;
+    private String userAvatar;
     private String content;
-    private Date inTime;
     private Integer commentId;
     // 点赞用户的id
     private String upIds;
+    private Date inTime;
+    private long createdTime;
+    private long updatedTime;
 
     public String getUpIds() {
         return upIds;
@@ -48,11 +52,11 @@ public class Comment implements Serializable {
         this.topicId = topicId;
     }
 
-    public Integer getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 
@@ -78,5 +82,77 @@ public class Comment implements Serializable {
 
     public void setCommentId(Integer commentId) {
         this.commentId = commentId;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public Comment setUserName(String userName) {
+        this.userName = userName;
+        return this;
+    }
+
+    public String getUserAvatar() {
+        return userAvatar;
+    }
+
+    public Comment setUserAvatar(String userAvatar) {
+        this.userAvatar = userAvatar;
+        return this;
+    }
+
+    public long getCreatedTime() {
+        return createdTime;
+    }
+
+    public Comment setCreatedTime(long createdTime) {
+        this.createdTime = createdTime;
+        return this;
+    }
+
+    public long getUpdatedTime() {
+        return updatedTime;
+    }
+
+    public Comment setUpdatedTime(long updatedTime) {
+        this.updatedTime = updatedTime;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return "Comment{"
+            + "id="
+            + id
+            + ", topicId="
+            + topicId
+            + ", userId="
+            + userId
+            + ", userName='"
+            + userName
+            + '\''
+            + ", userAvatar='"
+            + userAvatar
+            + '\''
+            + ", content='"
+            + content
+            + '\''
+            + ", commentId="
+            + commentId
+            + ", upIds='"
+            + upIds
+            + '\''
+            + ", inTime="
+            + inTime
+            + ", createdTime="
+            + createdTime
+            + ", updatedTime="
+            + updatedTime
+            + '}';
     }
 }

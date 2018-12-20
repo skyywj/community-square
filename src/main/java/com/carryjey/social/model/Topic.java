@@ -21,7 +21,7 @@ public class Topic implements Serializable {
     private String content;
     private Date inTime;
     private Date modifyTime;
-    private Integer userId;
+    private long userId;
     // 评论数
     private Integer commentCount;
     // 收藏数
@@ -91,11 +91,11 @@ public class Topic implements Serializable {
         this.modifyTime = modifyTime;
     }
 
-    public Integer getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 

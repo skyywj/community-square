@@ -63,7 +63,7 @@ public class CommentApiController extends BaseApiController {
     public Result vote(Integer id, HttpSession session) {
         Comment comment = commentService.selectById(id);
         ApiAssert.notNull(comment, "这个评论可能已经被删除了");
-        ApiAssert.notTrue(comment.getUserId().equals(getUser().getId()), "给自己评论点赞，脸皮真厚！！");
+        ApiAssert.notTrue(comment.getUserId() == getUser().getId(), "给自己评论点赞，脸皮真厚！！");
         int voteCount = commentService.vote(comment, getUser(), session);
         return success(voteCount);
     }

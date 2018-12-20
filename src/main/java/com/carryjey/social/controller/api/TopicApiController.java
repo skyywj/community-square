@@ -49,7 +49,7 @@ public class TopicApiController extends BaseApiController {
         ApiAssert.notTrue(set.size() > 5 || set.size() == 0, "请输入标签且标签最多5个");
         // 更新话题
         Topic topic = topicService.selectById(id);
-        ApiAssert.isTrue(topic.getUserId().equals(getUser().getId()), "谁给你的权限修改别人的话题的？");
+        ApiAssert.isTrue(topic.getUserId() == getUser().getUserId(), "谁给你的权限修改别人的话题的？");
         // 再次将tag转成逗号隔开的字符串
         tags = StringUtils.collectionToCommaDelimitedString(set);
         topic = topicService.updateTopic(topic, title, content, tags);
@@ -60,7 +60,7 @@ public class TopicApiController extends BaseApiController {
     @GetMapping("/delete")
     public Result delete(Integer id, HttpSession session) {
         Topic topic = topicService.selectById(id);
-        ApiAssert.isTrue(topic.getUserId().equals(getUser().getId()), "谁给你的权限删除别人的话题的？");
+        ApiAssert.isTrue(topic.getUserId() == getUser().getUserId(), "谁给你的权限删除别人的话题的？");
         topicService.delete(topic, session);
         return success();
     }
@@ -69,7 +69,7 @@ public class TopicApiController extends BaseApiController {
     public Result vote(Integer id, HttpSession session) {
         Topic topic = topicService.selectById(id);
         ApiAssert.notNull(topic, "这个话题可能已经被删除了");
-        ApiAssert.notTrue(topic.getUserId().equals(getUser().getId()), "给自己话题点赞，脸皮真厚！！");
+        ApiAssert.notTrue(topic.getUserId() == getUser().getUserId(), "给自己话题点赞，脸皮真厚！！");
         int voteCount = topicService.vote(topic, getUser(), session);
         return success(voteCount);
     }
