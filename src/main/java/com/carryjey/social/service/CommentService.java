@@ -71,6 +71,7 @@ public class CommentService {
         comment.setContent(content);
         comment.setInTime(new Date());
         comment.setTopicId(topic.getId());
+        comment.setTopicUserName(topic.getUserName());
         comment.setUserId(user.getUserId());
         comment.setUserName(user.getUsername());
         comment.setUserAvatar(user.getAvatar());

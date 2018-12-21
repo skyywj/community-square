@@ -5,16 +5,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
-import javax.mail.Authenticator;
+import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
+import javax.mail.Multipart;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import java.util.Properties;
 
 /**
@@ -29,6 +30,9 @@ public class EmailUtil {
 
     private Session session;
     private Logger log = LoggerFactory.getLogger(EmailUtil.class);
+    private String fromMailAddress = null;
+    private String authCode = null;
+    private String host = null;
 
     private Session instance() {
         // 如果session已经存在了，就不执行了，直接返回对象
@@ -36,69 +40,40 @@ public class EmailUtil {
             return session;
         }
         // session为空，判断系统是否配置了邮箱相关的参数，配置了继续，没配置白白
-        String host = (String) systemConfigService.selectAllConfig().get("mail.host");
-        String username = (String) systemConfigService.selectAllConfig().get("mail.username");
-        String password = (String) systemConfigService.selectAllConfig().get("mail.password");
-        if (StringUtils.isEmpty(host) || StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
-            return null;
-        }
-        Properties properties = new Properties();
-        properties.setProperty("mail.host", host.toString());
-        //是否进行权限验证。
-        properties.setProperty("mail.smtp.auth", "true");
-        //0.2确定权限（账号和密码）
-        Authenticator authenticator =
-            new Authenticator() {
-                @Override
-                protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(username.toString(), password.toString());
-                }
-            };
-        //1 获得连接
-        /*
-         props：包含配置信息的对象，Properties类型
-                 配置邮箱服务器地址、配置是否进行权限验证(帐号密码验证)等
-
-         authenticator：确定权限(帐号和密码)
-
-         所以就要在上面构建这两个对象。
-        */
-        this.session = Session.getDefaultInstance(properties, authenticator);
+        host = (String) systemConfigService.selectAllConfig().get("mail.host");
+        fromMailAddress = (String) systemConfigService.selectAllConfig().get("mail.username");
+        authCode = (String) systemConfigService.selectAllConfig().get("mail.auth.code");
+        Properties props = new Properties();
+        props.setProperty("mail.smtp.host", host); // 设置发送邮件的邮件服务器的属性（这里使用网易的smtp服务器）
+        props.put("mail.smtp.host", host); // 需要经过授权，也就是有户名和密码的校验，这样才能通过验证（一定要有这一条）
+        props.put("mail.smtp.auth", "true"); // 用刚刚设置好的props对象构建一个session
+        session = Session.getDefaultInstance(props); // 有了这句便可以在发送邮件的过程中在console处显示过程信息，供调试使
+        // 用（你可以在控制台（console)上看到发送邮件的过程）
+        session.setDebug(true); // 用session为参数定义消息对象
         return this.session;
     }
 
-    public boolean sendEmail(String email, String title, String content) {
+    public boolean sendEmail(String toMmail, String title, String content) {
         // 先判断session是否初始化了，没配置直接失败
         if (this.instance() == null) {
             return false;
         }
+        //2 加载发件人信息
+        Message message = new MimeMessage(this.session);
         try {
-            //2 创建消息
-            Message message = new MimeMessage(this.session);
-            String from = systemConfigService.selectAllConfig().get("mail.username").toString();
-            // 2.1 发件人        xxx@163.com 我们自己的邮箱地址，就是名称
-            message.setFrom(new InternetAddress(from));
-            /*
-             2.2 收件人
-                     第一个参数：
-                         RecipientType.TO    代表收件人
-                         RecipientType.CC    抄送
-                         RecipientType.BCC    暗送
-                     比如A要给B发邮件，但是A觉得有必要给要让C也看看其内容，就在给B发邮件时，
-                     将邮件内容抄送给C，那么C也能看到其内容了，但是B也能知道A给C抄送过该封邮件
-                     而如果是暗送(密送)给C的话，那么B就不知道A给C发送过该封邮件。
-                 第二个参数
-                     收件人的地址，或者是一个Address[]，用来装抄送或者暗送人的名单。或者用来群发。可以是相同邮箱服务器的，也可以是不同的
-                     这里我们发送给我们的qq邮箱
-            */
-            message.setRecipient(Message.RecipientType.TO, new InternetAddress(email));
-            // 2.3 主题（标题）
-            message.setSubject(title);
-            // 2.4 正文
-            //设置编码，防止发送的内容中文乱码。
-            message.setContent(content, "text/html;charset=UTF-8");
-            //3发送消息
-            Transport.send(message);
+            message.setFrom(new InternetAddress(fromMailAddress));
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(toMmail)); // 加载收件人地址
+            message.setSubject(title); // 加载标题
+            Multipart multipart = new MimeMultipart(); // 向multipart对象中添加邮件的各个部分内容，包括文本内容和附件
+            BodyPart contentPart = new MimeBodyPart(); // 设置邮件的文本内容
+            contentPart.setContent(content, "text/html;charset=utf-8");
+            multipart.addBodyPart(contentPart);
+            message.setContent(multipart);
+            message.saveChanges(); // 保存变化
+            Transport transport = session.getTransport("smtp"); // 连接服务器的邮箱
+            transport.connect("smtp.163.com", fromMailAddress, authCode); // 把邮件发送出去
+            transport.sendMessage(message, message.getAllRecipients());
+            transport.close();
             return true;
         } catch (MessagingException e) {
             log.error(e.getMessage());

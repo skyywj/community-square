@@ -17,6 +17,7 @@ public class Comment implements Serializable {
     private Integer id;
 
     private Integer topicId;
+    private String topicUserName;
     private long userId;
     private String userName;
     private String userAvatar;
@@ -124,6 +125,15 @@ public class Comment implements Serializable {
         return this;
     }
 
+    public String getTopicUserName() {
+        return topicUserName;
+    }
+
+    public Comment setTopicUserName(String topicUserName) {
+        this.topicUserName = topicUserName;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "Comment{"
@@ -131,6 +141,9 @@ public class Comment implements Serializable {
             + id
             + ", topicId="
             + topicId
+            + ", topicUserName='"
+            + topicUserName
+            + '\''
             + ", userId="
             + userId
             + ", userName='"

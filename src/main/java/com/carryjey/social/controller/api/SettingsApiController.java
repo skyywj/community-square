@@ -120,7 +120,6 @@ public class SettingsApiController extends BaseApiController {
         if (session != null) {
             session.removeAttribute("_user");
             session.setAttribute("_user", user);
-            System.out.print(session.getAttribute("_user"));
         }
         return success(url);
     }
