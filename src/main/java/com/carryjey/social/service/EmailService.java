@@ -1,6 +1,5 @@
-package com.carryjey.social.util;
+package com.carryjey.social.service;
 
-import com.carryjey.social.service.SystemConfigService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,17 +18,17 @@ import javax.mail.internet.MimeMultipart;
 import java.util.Properties;
 
 /**
- * Created by tomoya. Copyright (c) 2018, All Rights Reserved. https://yiiu.co
+ * @author CarryJey
+ * @since 2018/12/20 DESC:邮箱服务
  */
-// 这个工具类来自博客：https://www.cnblogs.com/whgk/p/6506027.html
 @Component
-public class EmailUtil {
+public class EmailService {
 
     @Autowired
     private SystemConfigService systemConfigService;
 
     private Session session;
-    private Logger log = LoggerFactory.getLogger(EmailUtil.class);
+    private Logger log = LoggerFactory.getLogger(EmailService.class);
     private String fromMailAddress = null;
     private String authCode = null;
     private String host = null;

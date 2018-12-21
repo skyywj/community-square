@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.carryjey.social.mapper.CodeMapper;
 import com.carryjey.social.model.Code;
 import com.carryjey.social.util.DateUtil;
-import com.carryjey.social.util.EmailUtil;
 import com.carryjey.social.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +23,7 @@ public class CodeService {
     private CodeMapper codeMapper;
 
     @Autowired
-    private EmailUtil emailUtil;
+    private EmailService emailUtil;
 
     // 递归生成code，防止code重复
     private String generateToken() {
