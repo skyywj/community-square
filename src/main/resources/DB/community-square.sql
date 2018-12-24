@@ -304,7 +304,7 @@ LOCK TABLES `system_config` WRITE;
 
 INSERT INTO `system_config` (`id`, `key`, `value`, `description`, `pid`)
 VALUES
-	(1, 'adminRememberMeMaxAge', '30', '登录后台记住我功能记住时间，单位：天', 23),
+	(1, 'adminRememberMeMaxAge', '1', '登录后台记住我功能记住时间，单位：天', 23),
 	(2, 'baseUrl', 'http://localhost:8080', '网站部署后访问的域名，注意这个后面没有 \"/\"', 23),
 	(3, 'commentLayer', '0', '评论盖楼形式显示，1：是，0：否', 23),
 	(4, 'cookie.domain', 'localhost', '存cookie时用到的域名，要与网站部署后访问的域名一致', 23),

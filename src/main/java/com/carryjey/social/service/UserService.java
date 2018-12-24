@@ -115,7 +115,7 @@ public class UserService {
     public IPage<User> selectAll(Integer pageNo) {
         Page<User> page =
             new Page<>(pageNo, Integer.parseInt((String) systemConfigService.selectAllConfig().get("pageSize")));
-        page.setDesc("in_time");
+        page.setDesc("created_time");
         return userMapper.selectPage(page, null);
     }
 

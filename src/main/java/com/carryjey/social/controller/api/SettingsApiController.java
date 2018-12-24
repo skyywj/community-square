@@ -68,7 +68,7 @@ public class SettingsApiController extends BaseApiController {
     public Result sendEmailCode(String email) {
         ApiAssert.notEmpty(email, "请输入邮箱 ");
         ApiAssert.isTrue(StringUtil.check(email, StringUtil.emailRegex), "邮箱格式不正确");
-        if (codeService.sendEmail(getUser().getId(), email)) {
+        if (codeService.sendEmail(getUser().getUserId(), email)) {
             return success();
         } else {
             return error("邮件发送失败，也可能是站长没有配置邮箱");
@@ -80,7 +80,7 @@ public class SettingsApiController extends BaseApiController {
     public Result updateEmail(String email, String code, HttpSession session) {
         ApiAssert.notEmpty(email, "请输入邮箱 ");
         ApiAssert.isTrue(StringUtil.check(email, StringUtil.emailRegex), "邮箱格式不正确");
-        Code code1 = codeService.validateCode(getUser().getId(), email, code);
+        Code code1 = codeService.validateCode(getUser().getUserId(), email, code);
         if (code1 == null) {
             return error("验证码错误");
         }

@@ -62,7 +62,7 @@ public class TopicController extends BaseController {
         List<Collect> collects = collectService.selectByTopicId(id);
         // 如果自己登录了，查询自己是否收藏过这个话题
         if (getUser() != null) {
-            Collect collect = collectService.selectByTopicIdAndUserId(id, getUser().getId());
+            Collect collect = collectService.selectByTopicIdAndUserId(id, getUser().getUserId());
             model.addAttribute("collect", collect);
         }
         // 话题浏览量+1
@@ -87,7 +87,7 @@ public class TopicController extends BaseController {
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable Integer id, Model model) {
         Topic topic = topicService.selectById(id);
-        Assert.isTrue(topic.getUserId() == getUser().getId(), "谁给你的权限修改别人的话题的？");
+        Assert.isTrue(topic.getUserId() == getUser().getUserId(), "谁给你的权限修改别人的话题的？");
         // 查询话题的标签
         List<Tag> tagList = tagService.selectByTopicId(id);
         // 将标签集合转成逗号隔开的字符串
