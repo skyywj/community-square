@@ -1,19 +1,19 @@
 <#macro topics page tags=true>
-  <#list page.records as topic>
+    <#list page.records as topic>
     <div class="media">
-      <div class="media-left">
-        <a href="/user/${topic.username!}"><img src="${topic.avatar!}" class="avatar" alt=""></a>
-      </div>
-      <div class="media-body">
-        <div class="title">
-          <a href="/topic/${topic.id}">${topic.title!?html}</a>
+        <div class="media-left">
+            <a href="/user/${topic.userName!}"><img src="${topic.avatar!}" class="avatar" alt=""></a>
         </div>
-        <p class="gray">
-          <#--<#if (topic.up - topic.down) &gt; 0>
-            <i class="fa fa-chevron-up"></i>
-            <span>${topic.up - topic.down}</span>
-            <span>•</span>
-          </#if>-->
+        <div class="media-body">
+            <div class="title">
+                <a href="/topic/${topic.id}">${topic.title!?html}</a>
+            </div>
+            <p class="gray">
+            <#--<#if (topic.up - topic.down) &gt; 0>
+              <i class="fa fa-chevron-up"></i>
+              <span>${topic.up - topic.down}</span>
+              <span>•</span>
+            </#if>-->
           <#if topic.top == true>
             <span class="label label-primary">置顶</span>
             <span>•</span>
@@ -21,24 +21,24 @@
             <span class="label label-success">精华</span>
             <span>•</span>
           </#if>
-          <span><a href="/user/${topic.username!}">${topic.username!}</a></span>
-          <span class="hidden-sm hidden-xs">•</span>
-          <span class="hidden-sm hidden-xs"><a href="/topic/${topic.id}">${topic.commentCount!0}个评论</a></span>
-          <span class="hidden-sm hidden-xs">•</span>
-          <span class="hidden-sm hidden-xs">${topic.view!0}次浏览</span>
-          <span>•</span>
-          <span>${model.formatDate(topic.inTime)}</span>
+                <span><a href="/user/${topic.userName!}">${topic.userName!}</a></span>
+                <span class="hidden-sm hidden-xs">•</span>
+                <span class="hidden-sm hidden-xs"><a href="/topic/${topic.id}">${topic.commentCount!0}个评论</a></span>
+                <span class="hidden-sm hidden-xs">•</span>
+                <span class="hidden-sm hidden-xs">${topic.view!0}次浏览</span>
+                <span>•</span>
+                <span>${model.formatDate(topic.inTime)}</span>
           <#if tags>
             <span>•</span>
-            <#list topic.tags as tag>
+              <#list topic.tags as tag>
               <a href="/topic/tag/${tag.name}"><span class="label label-success">${tag.name}</span></a>
-            </#list>
+              </#list>
           </#if>
-        </p>
-      </div>
+            </p>
+        </div>
     </div>
-    <#if topic?has_next>
+        <#if topic?has_next>
       <div class="divide"></div>
-    </#if>
-  </#list>
+        </#if>
+    </#list>
 </#macro>

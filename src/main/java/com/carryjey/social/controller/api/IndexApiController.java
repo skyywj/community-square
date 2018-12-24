@@ -54,12 +54,13 @@ public class IndexApiController extends BaseApiController {
 
     // 处理注册的接口
     @PostMapping("/register")
-    public Result register(String username, String password, HttpSession session) {
+    public Result register(String username, String password, String mail, HttpSession session) {
         ApiAssert.notEmpty(username, "请输入用户名");
         ApiAssert.notEmpty(password, "请输入密码");
+        ApiAssert.notEmpty(mail, "请输入邮箱");
         User user = userService.selectByUsername(username);
         ApiAssert.isNull(user, "用户名已存在");
-        user = userService.addUser(username, password);
+        user = userService.addUser(username, password, mail);
         // 将用户信息写session
         if (session != null) {
             session.setAttribute("_user", user);

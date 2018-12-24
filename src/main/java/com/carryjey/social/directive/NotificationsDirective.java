@@ -29,7 +29,7 @@ public class NotificationsDirective implements TemplateDirectiveModel {
     public void execute(
         Environment environment, Map map, TemplateModel[] templateModels, TemplateDirectiveBody templateDirectiveBody)
         throws TemplateException, IOException {
-        Integer userId = Integer.parseInt(map.get("userId").toString());
+        long userId = Long.valueOf(map.get("userId").toString());
         Boolean read = Integer.parseInt(map.get("read").toString()) == 1;
         // 如果想查询所有的消息，limit 传一个负数就可以了 比如 -1
         Integer limit = Integer.parseInt(map.get("limit").toString());

@@ -18,9 +18,9 @@ public class Notification implements Serializable {
     private Integer id;
 
     private Integer topicId;
-    private Integer userId;
+    private long userId;
     // 通知对象ID
-    private Integer targetUserId;
+    private long targetUserId;
     // 动作: REPLY, COMMENT, COLLECT, TOPIC_UP, COMMENT_UP
     private String action;
     private Date inTime;
@@ -53,19 +53,19 @@ public class Notification implements Serializable {
         this.topicId = topicId;
     }
 
-    public Integer getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 
-    public Integer getTargetUserId() {
+    public long getTargetUserId() {
         return targetUserId;
     }
 
-    public void setTargetUserId(Integer targetUserId) {
+    public void setTargetUserId(long targetUserId) {
         this.targetUserId = targetUserId;
     }
 

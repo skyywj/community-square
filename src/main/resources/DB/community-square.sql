@@ -29,8 +29,7 @@ CREATE TABLE `admin_user` (
   `role_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
-  KEY `role_id` (`role_id`),
-  CONSTRAINT `admin_user_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`)
+  KEY `role_id` (`role_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 LOCK TABLES `admin_user` WRITE;
@@ -51,7 +50,7 @@ DROP TABLE IF EXISTS `code`;
 
 CREATE TABLE `code` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
+  `user_id` bigint(32) NOT NULL,
   `code` varchar(255) NOT NULL DEFAULT '',
   `in_time` datetime NOT NULL,
   `expire_time` datetime NOT NULL,
@@ -59,8 +58,7 @@ CREATE TABLE `code` (
   `used` bit(1) NOT NULL DEFAULT b'0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `code` (`code`),
-  KEY `user_id` (`user_id`),
-  CONSTRAINT `code_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+  KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -72,12 +70,10 @@ DROP TABLE IF EXISTS `collect`;
 
 CREATE TABLE `collect` (
   `topic_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
+  `user_id` bigint(32) NOT NULL,
   `in_time` datetime NOT NULL,
   KEY `topic_id` (`topic_id`),
-  KEY `user_id` (`user_id`),
-  CONSTRAINT `collect_ibfk_1` FOREIGN KEY (`topic_id`) REFERENCES `topic` (`id`),
-  CONSTRAINT `collect_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+  KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -91,15 +87,18 @@ CREATE TABLE `comment` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `content` longtext NOT NULL,
   `topic_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `in_time` datetime NOT NULL,
+  `topic_user_name` varchar(255) NOT NULL,
+  `user_id` bigint(32) NOT NULL,
+  `user_name` varchar(255) default NULL,
+  `user_avatar` varchar(1000) default NULL,
   `comment_id` int(11) DEFAULT NULL,
   `up_ids` text,
+  `in_time` datetime NOT NULL,
+  `created_time` bigint(20) NOT NULL,
+  `updated_time` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `topic_id` (`topic_id`),
-  KEY `user_id` (`user_id`),
-  CONSTRAINT `comment_ibfk_1` FOREIGN KEY (`topic_id`) REFERENCES `topic` (`id`),
-  CONSTRAINT `comment_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+  KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -112,8 +111,8 @@ DROP TABLE IF EXISTS `notification`;
 CREATE TABLE `notification` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `topic_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `target_user_id` int(11) NOT NULL,
+  `user_id` bigint(32) NOT NULL,
+  `target_user_id` bigint(32) NOT NULL,
   `action` varchar(255) NOT NULL DEFAULT '',
   `in_time` datetime NOT NULL,
   `read` bit(1) NOT NULL DEFAULT b'0',
@@ -121,10 +120,7 @@ CREATE TABLE `notification` (
   PRIMARY KEY (`id`),
   KEY `topic_id` (`topic_id`),
   KEY `user_id` (`user_id`),
-  KEY `target_user_id` (`target_user_id`),
-  CONSTRAINT `notification_ibfk_1` FOREIGN KEY (`topic_id`) REFERENCES `topic` (`id`),
-  CONSTRAINT `notification_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
-  CONSTRAINT `notification_ibfk_3` FOREIGN KEY (`target_user_id`) REFERENCES `user` (`id`)
+  KEY `target_user_id` (`target_user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -231,9 +227,7 @@ CREATE TABLE `role_permission` (
   `role_id` int(11) NOT NULL,
   `permission_id` int(11) NOT NULL,
   KEY `role_id` (`role_id`),
-  KEY `permission_id` (`permission_id`),
-  CONSTRAINT `role_permission_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`),
-  CONSTRAINT `role_permission_ibfk_2` FOREIGN KEY (`permission_id`) REFERENCES `permission` (`id`)
+  KEY `permission_id` (`permission_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 LOCK TABLES `role_permission` WRITE;
@@ -310,7 +304,7 @@ LOCK TABLES `system_config` WRITE;
 
 INSERT INTO `system_config` (`id`, `key`, `value`, `description`, `pid`)
 VALUES
-	(1, 'adminRememberMeMaxAge', '30', '登录后台记住我功能记住时间，单位：天', 23),
+	(1, 'adminRememberMeMaxAge', '1', '登录后台记住我功能记住时间，单位：天', 23),
 	(2, 'baseUrl', 'http://localhost:8080', '网站部署后访问的域名，注意这个后面没有 \"/\"', 23),
 	(3, 'commentLayer', '0', '评论盖楼形式显示，1：是，0：否', 23),
 	(4, 'cookie.domain', 'localhost', '存cookie时用到的域名，要与网站部署后访问的域名一致', 23),
@@ -321,9 +315,9 @@ VALUES
 	(9, 'deleteCommentScore', '5', '删除评论要被扣除的积分', 26),
 	(10, 'deleteTopicScore', '10', '删除话题要被扣除的积分', 26),
 	(11, 'intro', '<h5>属于山科大的BBS</h5><p>在这里，您可以提问，回答，分享，诉说，这是个属于山东科技大学的社区，欢迎您的加入！</p>', '站点介绍', 23),
-	(12, 'mail.host', 'smtp.qq.com', '邮箱的smtp服务器地址', 24),
-	(13, 'mail.password', '', '发送邮件的邮箱密码', 24),
-	(14, 'mail.username', 'xxoo@qq.com', '发送邮件的邮箱地址', 24),
+	(12, 'mail.host', 'smtp.163.com', '邮箱的smtp服务器地址', 24),
+	(13, 'mail.auth.code', '***', '发送邮件的邮箱授权码', 24),
+	(14, 'mail.username', 'CarryJey@163.com', '发送邮件的邮箱地址', 24),
 	(15, 'name', '山科微社交广场平台', '站点名称', 23),
 	(16, 'pageSize', '20', '分页每页条数', 23),
 	(17, 'socketNotification', '0', '是否开启websocket长连接获取通知数量，1：开启，0：关闭', 23),
@@ -337,12 +331,12 @@ VALUES
 	(25, NULL, NULL, '上传配置', 0),
 	(26, NULL, NULL, '积分配置', 0),
 	(27, NULL, NULL, 'Redis配置', 0),
-	(29, 'redis.host', NULL, 'redis服务host地址', 27),
-	(30, 'redis.port', NULL, 'redis服务端口', 27),
-	(31, 'redis.password', NULL, 'redis服务密码', 27),
-	(32, 'redis.timeout', NULL, '网站连接redis服务超时时间，单位毫秒', 27),
-	(33, 'redis.database', NULL, '网站连接redis服务的哪个数据库，默认0号数据库，取值范围0-15', 27),
-	(34, 'redis.ssl', NULL, 'redis服务是否开启认证连接，开启: 1，关闭: 0', 27);
+	(29, 'redis.host', '127.0.0.1', 'redis服务host地址', 27),
+	(30, 'redis.port', '6379', 'redis服务端口', 27),
+	(31, 'redis.password', '123456', 'redis服务密码', 27),
+	(32, 'redis.timeout', '3000', '网站连接redis服务超时时间，单位毫秒', 27),
+	(33, 'redis.database', '0', '网站连接redis服务的哪个数据库，默认0号数据库，取值范围0-15', 27),
+	(34, 'redis.ssl', '0', 'redis服务是否开启认证连接，开启: 1，关闭: 0', 27);
 
 /*!40000 ALTER TABLE `system_config` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -376,17 +370,20 @@ CREATE TABLE `topic` (
   `content` longtext,
   `in_time` datetime NOT NULL,
   `modify_time` datetime DEFAULT NULL,
-  `user_id` int(11) NOT NULL,
+  `user_id` bigint(32) NOT NULL,
+  `user_name`varchar(255) default NULL,
+  `user_avatar`varchar(1000) default NULL,
   `comment_count` int(11) NOT NULL DEFAULT '0',
   `collect_count` int(11) NOT NULL DEFAULT '0',
   `view` int(11) NOT NULL DEFAULT '0',
   `top` bit(1) NOT NULL DEFAULT b'0',
   `good` bit(1) NOT NULL DEFAULT b'0',
   `up_ids` text,
+  `created_time` bigint(20) NOT NULL,
+  `updated_time` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `title` (`title`),
-  KEY `user_id` (`user_id`),
-  CONSTRAINT `topic_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+  KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -400,9 +397,7 @@ CREATE TABLE `topic_tag` (
   `tag_id` int(11) NOT NULL,
   `topic_id` int(11) NOT NULL,
   KEY `tag_id` (`tag_id`),
-  KEY `topic_id` (`topic_id`),
-  CONSTRAINT `topic_tag_ibfk_1` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`id`),
-  CONSTRAINT `topic_tag_ibfk_2` FOREIGN KEY (`topic_id`) REFERENCES `topic` (`id`)
+  KEY `topic_id` (`topic_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -414,6 +409,7 @@ DROP TABLE IF EXISTS `user`;
 
 CREATE TABLE `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(32) NOT NULL,
   `username` varchar(255) NOT NULL DEFAULT '',
   `password` varchar(255) DEFAULT '',
   `avatar` varchar(1000) DEFAULT NULL,
@@ -421,14 +417,16 @@ CREATE TABLE `user` (
   `website` varchar(255) DEFAULT NULL,
   `bio` varchar(1000) DEFAULT NULL,
   `score` int(11) NOT NULL DEFAULT '0',
-  `in_time` datetime NOT NULL,
   `token` varchar(255) NOT NULL DEFAULT '',
   `github_name` varchar(255) DEFAULT NULL,
   `telegram_name` varchar(255) DEFAULT NULL,
   `email_notification` bit(1) NOT NULL DEFAULT b'0',
+  `created_time` bigint(20) NOT NULL,
+  `updated_time` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
-  UNIQUE KEY `token` (`token`)
+  UNIQUE KEY `token` (`token`),
+  UNIQUE KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 

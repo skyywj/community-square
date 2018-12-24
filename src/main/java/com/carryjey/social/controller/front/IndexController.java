@@ -63,7 +63,7 @@ public class IndexController extends BaseController {
     public String settings(HttpSession session, Model model) {
         // 再查一遍，保证数据的最新
         User user = (User) session.getAttribute("_user");
-        user = userService.selectById(user.getId());
+        user = userService.selectByUserId(user.getUserId());
         model.addAttribute("user", user);
         return "front/user/settings";
     }

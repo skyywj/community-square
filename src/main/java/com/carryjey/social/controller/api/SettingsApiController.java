@@ -49,7 +49,7 @@ public class SettingsApiController extends BaseApiController {
         @RequestParam(defaultValue = "0") Boolean emailNotification,
         HttpSession session) {
         // 查询当前用户的最新信息
-        User user = userService.selectById(getUser().getId());
+        User user = userService.selectByUserId(getUser().getUserId());
         user.setGithubName(githubName);
         user.setTelegramName(telegramName);
         user.setWebsite(website);
@@ -68,7 +68,7 @@ public class SettingsApiController extends BaseApiController {
     public Result sendEmailCode(String email) {
         ApiAssert.notEmpty(email, "请输入邮箱 ");
         ApiAssert.isTrue(StringUtil.check(email, StringUtil.emailRegex), "邮箱格式不正确");
-        if (codeService.sendEmail(getUser().getId(), email)) {
+        if (codeService.sendEmail(getUser().getUserId(), email)) {
             return success();
         } else {
             return error("邮件发送失败，也可能是站长没有配置邮箱");
@@ -80,7 +80,7 @@ public class SettingsApiController extends BaseApiController {
     public Result updateEmail(String email, String code, HttpSession session) {
         ApiAssert.notEmpty(email, "请输入邮箱 ");
         ApiAssert.isTrue(StringUtil.check(email, StringUtil.emailRegex), "邮箱格式不正确");
-        Code code1 = codeService.validateCode(getUser().getId(), email, code);
+        Code code1 = codeService.validateCode(getUser().getUserId(), email, code);
         if (code1 == null) {
             return error("验证码错误");
         }
@@ -88,7 +88,7 @@ public class SettingsApiController extends BaseApiController {
         code1.setUsed(true);
         codeService.update(code1);
         // 查询当前用户的最新信息
-        User user = userService.selectById(getUser().getId());
+        User user = userService.selectByUserId(getUser().getUserId());
         user.setEmail(email);
         userService.update(user);
         if (session != null) {
@@ -112,7 +112,7 @@ public class SettingsApiController extends BaseApiController {
             return error("上传的文件不存在或者上传过程发生了错误，请重试一下");
         }
         // 查询当前用户的最新信息
-        User user = userService.selectById(getUser().getId());
+        User user = userService.selectByUserId(getUser().getUserId());
         user.setAvatar(url);
         // 保存用户新的头像
         userService.updateAvatar(user);
@@ -120,7 +120,6 @@ public class SettingsApiController extends BaseApiController {
         if (session != null) {
             session.removeAttribute("_user");
             session.setAttribute("_user", user);
-            System.out.print(session.getAttribute("_user"));
         }
         return success(url);
     }
@@ -133,7 +132,7 @@ public class SettingsApiController extends BaseApiController {
         ApiAssert.notTrue(oldPassword.equals(newPassword), "新密码怎么还是旧的？");
         ApiAssert.isTrue(new BCryptPasswordEncoder().matches(oldPassword, getUser().getPassword()), "旧密码不正确");
         // 查询当前用户的最新信息
-        User user = userService.selectById(getUser().getId());
+        User user = userService.selectByUserId(getUser().getUserId());
         user.setPassword(new BCryptPasswordEncoder().encode(newPassword));
         userService.update(user);
         // 将最新的用户信息更新在session里

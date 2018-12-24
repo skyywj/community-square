@@ -28,59 +28,64 @@ public class RedisUtil {
     }
 
     public Jedis instance() {
-        try {
-            if (this.jedis != null) {
-                return this.jedis;
-            }
-            // 获取redis的连接
-            // host
-            SystemConfig systemConfigHost = systemConfigService.selectByKey("redis.host");
-            String host = systemConfigHost.getValue();
-            // port
-            SystemConfig systemConfigPort = systemConfigService.selectByKey("redis.port");
-            String port = systemConfigPort.getValue();
-            // password
-            SystemConfig systemConfigPassword = systemConfigService.selectByKey("redis.password");
-            String password = systemConfigPassword.getValue();
-            password = StringUtils.isEmpty(password) ? null : password;
-            // database
-            SystemConfig systemConfigDatabase = systemConfigService.selectByKey("redis.database");
-            String database = systemConfigDatabase.getValue();
-            // timeout
-            SystemConfig systemConfigTimeout = systemConfigService.selectByKey("redis.timeout");
-            String timeout = systemConfigTimeout.getValue();
-            // ssl
-            SystemConfig systemConfigSSL = systemConfigService.selectByKey("redis.ssl");
-            String ssl = systemConfigSSL.getValue();
+        if (this.jedis != null) {
+            return this.jedis;
+        }
+        // 获取redis的连接
+        // host
+        SystemConfig systemConfigHost = systemConfigService.selectByKey("redis.host");
+        String host = systemConfigHost.getValue();
+        // port
+        SystemConfig systemConfigPort = systemConfigService.selectByKey("redis.port");
+        String port = systemConfigPort.getValue();
+        // password
+        SystemConfig systemConfigPassword = systemConfigService.selectByKey("redis.password");
+        String password = systemConfigPassword.getValue();
+        password = StringUtils.isEmpty(password) ? null : password;
+        // database
+        SystemConfig systemConfigDatabase = systemConfigService.selectByKey("redis.database");
+        String database = systemConfigDatabase.getValue();
+        // timeout
+        SystemConfig systemConfigTimeout = systemConfigService.selectByKey("redis.timeout");
+        String timeout = systemConfigTimeout.getValue();
+        // ssl
+        SystemConfig systemConfigSSL = systemConfigService.selectByKey("redis.ssl");
+        String ssl = systemConfigSSL.getValue();
 
-            if (StringUtils.isEmpty(host)
-                || StringUtils.isEmpty(port)
-                || StringUtils.isEmpty(database)
-                || StringUtils.isEmpty(timeout)) {
-                log.info("redis配置信息不全或没有配置...");
-                return null;
-            }
-            JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
-            // 配置jedis连接池最多空闲多少个实例，源码默认 8
-            jedisPoolConfig.setMaxIdle(8);
-            // 配置jedis连接池最多创建多少个实例，源码默认 8
-            jedisPoolConfig.setMaxTotal(8);
-            JedisPool jedisPool =
-                new JedisPool(
-                    jedisPoolConfig,
-                    host,
-                    Integer.parseInt(port),
-                    Integer.parseInt(timeout),
-                    password,
-                    Integer.parseInt(database),
-                    null,
-                    ssl.equals("1"));
+        if (StringUtils.isEmpty(host)
+            || StringUtils.isEmpty(port)
+            || StringUtils.isEmpty(database)
+            || StringUtils.isEmpty(timeout)) {
+            log.info("redis配置信息不全或没有配置...");
+            return null;
+        }
+        JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
+        // 配置jedis连接池最多空闲多少个实例，源码默认 8
+        jedisPoolConfig.setMaxIdle(200);
+        // 配置jedis连接池最多创建多少个实例，源码默认 8
+        jedisPoolConfig.setMaxTotal(300);
+        jedisPoolConfig.setMaxWaitMillis(10000);
+        JedisPool jedisPool =
+            new JedisPool(
+                jedisPoolConfig,
+                host,
+                Integer.parseInt(port),
+                Integer.parseInt(timeout),
+                password,
+                Integer.parseInt(database),
+                null,
+                ssl.equals("1"));
+        try {
             this.jedis = jedisPool.getResource();
             log.info("redis连接对象获取成功...");
             return this.jedis;
         } catch (Exception e) {
             log.error("配置redis连接池报错，错误信息: {}", e.getMessage());
             return null;
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
         }
     }
 

@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.carryjey.social.mapper.CodeMapper;
 import com.carryjey.social.model.Code;
 import com.carryjey.social.util.DateUtil;
-import com.carryjey.social.util.EmailUtil;
 import com.carryjey.social.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +23,7 @@ public class CodeService {
     private CodeMapper codeMapper;
 
     @Autowired
-    private EmailUtil emailUtil;
+    private EmailService emailUtil;
 
     // 递归生成code，防止code重复
     private String generateToken() {
@@ -43,7 +42,7 @@ public class CodeService {
     }
 
     // 查询没有用过的code
-    public Code selectNotUsedCode(Integer userId, String email) {
+    public Code selectNotUsedCode(long userId, String email) {
         QueryWrapper<Code> wrapper = new QueryWrapper<>();
         wrapper
             .lambda()
@@ -55,7 +54,7 @@ public class CodeService {
     }
 
     // 创建一条验证码记录
-    public Code createCode(Integer userId, String email) {
+    public Code createCode(long userId, String email) {
         Code code = this.selectNotUsedCode(userId, email);
         if (code == null) {
             code = new Code();
@@ -71,7 +70,7 @@ public class CodeService {
     }
 
     // 验证邮箱验证码
-    public Code validateCode(Integer userId, String email, String _code) {
+    public Code validateCode(long userId, String email, String _code) {
         QueryWrapper<Code> wrapper = new QueryWrapper<>();
         wrapper
             .lambda()
@@ -84,7 +83,7 @@ public class CodeService {
     }
 
     // 发送邮件
-    public boolean sendEmail(Integer userId, String email) {
+    public boolean sendEmail(long userId, String email) {
         Code code = this.createCode(userId, email);
         // 发送邮件
         return emailUtil.sendEmail(email, "修改邮箱验证码", "你的验证码是：" + code.getCode() + "<br>请在30分钟内使用");

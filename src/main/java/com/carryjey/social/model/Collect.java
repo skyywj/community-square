@@ -11,7 +11,7 @@ public class Collect implements Serializable {
 
     private static final long serialVersionUID = 7610730966340643542L;
     private Integer topicId;
-    private Integer userId;
+    private long userId;
     private Date inTime;
 
     public Integer getTopicId() {
@@ -22,11 +22,11 @@ public class Collect implements Serializable {
         this.topicId = topicId;
     }
 
-    public Integer getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 

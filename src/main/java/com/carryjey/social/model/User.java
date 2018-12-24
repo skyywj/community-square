@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * @author yanwenjie
@@ -18,6 +17,7 @@ public class User implements Serializable {
     @TableId(type = IdType.AUTO)
     private Integer id;
 
+    private long userId;
     private String username;
     private String githubName;
     private String telegramName;
@@ -30,15 +30,25 @@ public class User implements Serializable {
     private String website;
     private String bio;
     private Integer score;
-    private Date inTime;
     private String token;
     // 有消息通知是否通过邮箱收取
     private Boolean emailNotification;
+    private long createdTime;
+    private long updatedTime;
 
     // 有消息通知是否通过telegram收取
     // 文档上写的可以通过username跟userId发送消息，但测试结果是只能通过userId发送
     // 难道我调接口的姿势不对？待我后面再收拾它。。
     // private Boolean telegramNotification;
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public User setUserId(long userId) {
+        this.userId = userId;
+        return this;
+    }
 
     public Boolean getEmailNotification() {
         return emailNotification;
@@ -136,12 +146,26 @@ public class User implements Serializable {
         this.score = score;
     }
 
-    public Date getInTime() {
-        return inTime;
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
     }
 
-    public void setInTime(Date inTime) {
-        this.inTime = inTime;
+    public long getCreatedTime() {
+        return createdTime;
+    }
+
+    public User setCreatedTime(long createdTime) {
+        this.createdTime = createdTime;
+        return this;
+    }
+
+    public long getUpdatedTime() {
+        return updatedTime;
+    }
+
+    public User setUpdatedTime(long updatedTime) {
+        this.updatedTime = updatedTime;
+        return this;
     }
 
     @Override
@@ -149,6 +173,8 @@ public class User implements Serializable {
         return "User{"
             + "id="
             + id
+            + ", userId="
+            + userId
             + ", username='"
             + username
             + '\''
@@ -175,13 +201,15 @@ public class User implements Serializable {
             + '\''
             + ", score="
             + score
-            + ", inTime="
-            + inTime
             + ", token='"
             + token
             + '\''
             + ", emailNotification="
             + emailNotification
+            + ", createdTime="
+            + createdTime
+            + ", updatedTime="
+            + updatedTime
             + '}';
     }
 }

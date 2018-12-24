@@ -21,7 +21,9 @@ public class Topic implements Serializable {
     private String content;
     private Date inTime;
     private Date modifyTime;
-    private Integer userId;
+    private long userId;
+    private String userName;
+    private String userAvatar;
     // 评论数
     private Integer commentCount;
     // 收藏数
@@ -34,6 +36,9 @@ public class Topic implements Serializable {
     private Boolean good;
     // 点赞用户的id
     private String upIds;
+
+    private long createdTime;
+    private long updatedTime;
 
     public String getUpIds() {
         return upIds;
@@ -91,11 +96,11 @@ public class Topic implements Serializable {
         this.modifyTime = modifyTime;
     }
 
-    public Integer getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 
@@ -129,5 +134,88 @@ public class Topic implements Serializable {
 
     public void setGood(Boolean good) {
         this.good = good;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public Topic setUserName(String userName) {
+        this.userName = userName;
+        return this;
+    }
+
+    public String getUserAvatar() {
+        return userAvatar;
+    }
+
+    public Topic setUserAvatar(String userAvatar) {
+        this.userAvatar = userAvatar;
+        return this;
+    }
+
+    public long getCreatedTime() {
+        return createdTime;
+    }
+
+    public Topic setCreatedTime(long createdTime) {
+        this.createdTime = createdTime;
+        return this;
+    }
+
+    public long getUpdatedTime() {
+        return updatedTime;
+    }
+
+    public Topic setUpdatedTime(long updatedTime) {
+        this.updatedTime = updatedTime;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return "Topic{"
+            + "id="
+            + id
+            + ", title='"
+            + title
+            + '\''
+            + ", content='"
+            + content
+            + '\''
+            + ", inTime="
+            + inTime
+            + ", modifyTime="
+            + modifyTime
+            + ", userId="
+            + userId
+            + ", userName='"
+            + userName
+            + '\''
+            + ", userAvatar='"
+            + userAvatar
+            + '\''
+            + ", commentCount="
+            + commentCount
+            + ", collectCount="
+            + collectCount
+            + ", view="
+            + view
+            + ", top="
+            + top
+            + ", good="
+            + good
+            + ", upIds='"
+            + upIds
+            + '\''
+            + ", createdTime="
+            + createdTime
+            + ", updatedTime="
+            + updatedTime
+            + '}';
     }
 }
