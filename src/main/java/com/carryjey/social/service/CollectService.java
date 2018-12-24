@@ -48,7 +48,7 @@ public class CollectService {
     }
 
     // 查询用户是否收藏过某个话题
-    public Collect selectByTopicIdAndUserId(Integer topicId, Integer userId) {
+    public Collect selectByTopicIdAndUserId(Integer topicId, long userId) {
         QueryWrapper<Collect> wrapper = new QueryWrapper<>();
         wrapper.lambda().eq(Collect::getTopicId, topicId).eq(Collect::getUserId, userId);
         List<Collect> collects = collectMapper.selectList(wrapper);
@@ -59,7 +59,7 @@ public class CollectService {
     }
 
     // 收藏话题
-    public Collect insert(Integer topicId, Integer userId) {
+    public Collect insert(Integer topicId, long userId) {
         Collect collect = new Collect();
         collect.setTopicId(topicId);
         collect.setUserId(userId);
@@ -69,7 +69,7 @@ public class CollectService {
         // 通知
         Topic topic = topicService.selectById(topicId);
         // 收藏自己的话题不发通知
-        if (!userId.equals(topic.getUserId())) {
+        if (userId != topic.getUserId()) {
             notificationService.insert(userId, topic.getUserId(), topicId, "COLLECT", null);
         }
 
@@ -77,7 +77,7 @@ public class CollectService {
     }
 
     // 删除（取消）收藏
-    public void delete(Integer topicId, Integer userId) {
+    public void delete(Integer topicId, long userId) {
         QueryWrapper<Collect> wrapper = new QueryWrapper<>();
         wrapper.lambda().eq(Collect::getTopicId, topicId).eq(Collect::getUserId, userId);
         collectMapper.delete(wrapper);
@@ -90,21 +90,21 @@ public class CollectService {
         collectMapper.delete(wrapper);
     }
     // 根据用户id删除收藏记录
-    public void deleteByUserId(Integer userId) {
+    public void deleteByUserId(long userId) {
         QueryWrapper<Collect> wrapper = new QueryWrapper<>();
         wrapper.lambda().eq(Collect::getUserId, userId);
         collectMapper.delete(wrapper);
     }
 
     // 查询用户收藏的话题数
-    public int countByUserId(Integer userId) {
+    public int countByUserId(long userId) {
         QueryWrapper<Collect> wrapper = new QueryWrapper<>();
         wrapper.lambda().eq(Collect::getUserId, userId);
         return collectMapper.selectCount(wrapper);
     }
 
     // 查询用户收藏的话题
-    public IPage<Map<String, Object>> selectByUserId(Integer userId, Integer pageNo, Integer pageSize) {
+    public IPage<Map<String, Object>> selectByUserId(long userId, Integer pageNo, Integer pageSize) {
         IPage<Map<String, Object>> iPage =
             new Page<>(
                 pageNo,

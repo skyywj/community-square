@@ -17,7 +17,7 @@ public class Code implements Serializable {
     @TableId(type = IdType.AUTO)
     private Integer id;
     // 关联是哪个用户的验证码
-    private Integer userId;
+    private long userId;
     // 邮件链接里附带上的验证码
     private String code;
     private Date inTime;
@@ -28,11 +28,11 @@ public class Code implements Serializable {
     // 是否使用过
     private Boolean used;
 
-    public Integer getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 

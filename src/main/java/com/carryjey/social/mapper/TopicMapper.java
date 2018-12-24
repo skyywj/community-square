@@ -17,7 +17,7 @@ public interface TopicMapper extends BaseMapper<Topic> {
 
     IPage<Map<String, Object>> selectByTag(IPage<Map<String, Object>> iPage, @Param("tag") String tag);
 
-    IPage<Map<String, Object>> selectByUserId(IPage<Map<String, Object>> iPage, @Param("userId") Integer userId);
+    IPage<Map<String, Object>> selectByUserId(IPage<Map<String, Object>> iPage, @Param("userId") long userId);
 
     IPage<Map<String, Object>> selectAllForAdmin(
         IPage<Map<String, Object>> iPage,

@@ -25,7 +25,7 @@ public class CollectApiController extends BaseApiController {
     public Result get(Integer topicId) {
         Collect collect = collectService.selectByTopicIdAndUserId(topicId, getUser().getId());
         ApiAssert.isNull(collect, "做人要知足，每人每个话题只能收藏一次哦！");
-        collectService.insert(topicId, getUser().getId());
+        collectService.insert(topicId, getUser().getUserId());
         return success();
     }
 
@@ -34,7 +34,7 @@ public class CollectApiController extends BaseApiController {
     public Result delete(Integer topicId) {
         Collect collect = collectService.selectByTopicIdAndUserId(topicId, getUser().getId());
         ApiAssert.notNull(collect, "你都没有收藏这个话题，哪来的取消？");
-        collectService.delete(topicId, getUser().getId());
+        collectService.delete(topicId, getUser().getUserId());
         return success();
     }
 }

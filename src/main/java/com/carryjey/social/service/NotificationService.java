@@ -23,7 +23,7 @@ public class NotificationService {
     private NotificationMapper notificationMapper;
 
     // 查询消息
-    public List<Map<String, Object>> selectByUserId(Integer userId, Boolean read, Integer limit) {
+    public List<Map<String, Object>> selectByUserId(long userId, Boolean read, Integer limit) {
         List<Map<String, Object>> notifications = notificationMapper.selectByUserId(userId, read, limit);
         if (!read) {
             notificationMapper.updateNotificationStatus(userId);
@@ -32,7 +32,7 @@ public class NotificationService {
     }
 
     // 查询未读消息数量
-    public long countNotRead(Integer userId) {
+    public long countNotRead(long userId) {
         return notificationMapper.countNotRead(userId);
     }
 
@@ -42,13 +42,13 @@ public class NotificationService {
         notificationMapper.delete(wrapper);
     }
 
-    public void deleteByUserId(Integer userId) {
+    public void deleteByUserId(long userId) {
         QueryWrapper<Notification> wrapper = new QueryWrapper<>();
         wrapper.lambda().eq(Notification::getTargetUserId, userId).or().eq(Notification::getUserId, userId);
         notificationMapper.delete(wrapper);
     }
 
-    public void insert(Integer userId, Integer targetUserId, Integer topicId, String action, String content) {
+    public void insert(long userId, long targetUserId, Integer topicId, String action, String content) {
         Notification notification = new Notification();
         notification.setAction(action);
         notification.setContent(content);

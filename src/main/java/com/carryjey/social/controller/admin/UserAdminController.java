@@ -41,7 +41,7 @@ public class UserAdminController extends BaseAdminController {
     @RequiresPermissions("user:edit")
     @GetMapping("/edit")
     public String edit(Integer id, Model model) {
-        model.addAttribute("user", userService.selectById(id));
+        model.addAttribute("user", userService.selectByUserId(id));
         return "admin/user/edit";
     }
 
@@ -77,8 +77,8 @@ public class UserAdminController extends BaseAdminController {
     @RequiresPermissions("user:refresh_token")
     @GetMapping("/refreshToken")
     @ResponseBody
-    public Result refreshToken(Integer id) {
-        User user = userService.selectById(id);
+    public Result refreshToken(long userId) {
+        User user = userService.selectByUserId(userId);
         user.setToken(StringUtil.uuid());
         userService.update(user);
         return success(user);

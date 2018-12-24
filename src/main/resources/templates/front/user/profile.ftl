@@ -15,7 +15,7 @@
               <p><i class="gray">${user.bio!}</i></p>
             </#if>
                         <p>收藏话题: <a href="/user/${user.username}/collects">${collectCount!0}</a></p>
-                        <div>入驻时间: ${model.formatDate(user.inTime)}</div>
+                        <div>入驻时间: ${user.createdTime?number_to_datetime}</div>
                     </div>
                 </div>
             </div>
