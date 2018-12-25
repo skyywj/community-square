@@ -97,9 +97,7 @@ public class CodeService {
     public String createContent(Code code) {
         StringBuilder content =
             new StringBuilder(
-                "<div class=\"wrap\">\n"
-                    + "     <p>亲爱的朋友，您好：</p>\n"
-                    + "     <p>您的验证码是：<h2 class=\"code\">");
+                "<div class=\"wrap\">\n" + "     <p>亲爱的朋友，您好：</p>\n" + "     <p>您的验证码是：<h2 class=\"code\">");
         content.append(code.getCode());
         content.append("</h2>\n" + " </p>\n" + " </div>\n" + " <p>验证码有效期为30min，请在30min时间内使用！</p>\n" + "</div>\n");
         return content.toString();

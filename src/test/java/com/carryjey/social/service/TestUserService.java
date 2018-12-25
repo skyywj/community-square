@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
- * @author yanwenjie
+ * @author CarryJey
  * @since 2018/12/19
  */
 @SpringBootTest
@@ -20,7 +20,7 @@ public class TestUserService {
     private UserService userService;
 
     @Test
-    public void testSelectByUserName(){
+    public void testSelectByUserName() {
         System.out.print(userService.selectByUsername("CarryJey"));
     }
 }
