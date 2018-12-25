@@ -97,12 +97,13 @@ public class CommentService {
         if (commentId != null) {
             Comment targetComment = this.selectById(commentId);
             if (user.getUserId() != targetComment.getUserId()) {
-                notificationService.insert(user, targetComment.getUserId(), topic, "REPLY", content);
+                notificationService.insert(
+                    user.getUserId(), targetComment.getUserId(), topic.getId(), "REPLY", content);
             }
         }
         // 给话题作者发通知
-        if (user.getUserId() != topic.getUserId()) {
-            notificationService.insert(user, topic.getUserId(), topic, "COMMENT", content);
+        if (user.getUserId() == topic.getUserId()) {
+            notificationService.insert(user.getUserId(), topic.getUserId(), topic.getId(), "COMMENT", content);
         }
 
         // 日志 TODO

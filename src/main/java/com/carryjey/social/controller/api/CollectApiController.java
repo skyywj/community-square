@@ -25,7 +25,7 @@ public class CollectApiController extends BaseApiController {
     public Result get(Integer topicId) {
         Collect collect = collectService.selectByTopicIdAndUserId(topicId, getUser().getId());
         ApiAssert.isNull(collect, "做人要知足，每人每个话题只能收藏一次哦！");
-        collectService.insert(topicId, getUser());
+        collectService.insert(topicId, getUser().getUserId());
         return success();
     }
 
