@@ -86,10 +86,20 @@ public class CodeService {
     public boolean sendEmail(long userId, String email) {
         Code code = this.createCode(userId, email);
         // 发送邮件
-        return emailUtil.sendEmail(email, "修改邮箱验证码", "你的验证码是：" + code.getCode() + "<br>请在30分钟内使用");
+        return emailUtil.sendEmail(email, "修改邮箱验证码", createContent(code));
     }
 
     public void update(Code code) {
         codeMapper.updateById(code);
+    }
+
+    //生成邮箱验证码内容页
+    public String createContent(Code code) {
+        StringBuilder content =
+            new StringBuilder(
+                "<div class=\"wrap\">\n" + "     <p>亲爱的朋友，您好：</p>\n" + "     <p>您的验证码是：<h2 class=\"code\">");
+        content.append(code.getCode());
+        content.append("</h2>\n" + " </p>\n" + " </div>\n" + " <p>验证码有效期为30min，请在30min时间内使用！</p>\n" + "</div>\n");
+        return content.toString();
     }
 }

@@ -3,7 +3,7 @@ package com.carryjey.social.service;
 import org.springframework.stereotype.Service;
 
 /**
- * @author yanwenjie
+ * @author CarryJey
  * @since 2018/12/19
  */
 @Service

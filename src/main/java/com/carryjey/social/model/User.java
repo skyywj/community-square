@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 
 /**
- * @author yanwenjie
+ * @author CarryJey
  * @since 2018/12/17
  */
 public class User implements Serializable {

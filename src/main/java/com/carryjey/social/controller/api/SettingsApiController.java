@@ -20,7 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 /**
- * @author yanwenjie
+ * @author CarryJey
  * @since 2018/12/17
  */
 @RestController

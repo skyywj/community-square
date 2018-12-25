@@ -141,7 +141,6 @@ CREATE TABLE `permission` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 LOCK TABLES `permission` WRITE;
-/*!40000 ALTER TABLE `permission` DISABLE KEYS */;
 
 INSERT INTO `permission` (`id`, `name`, `value`, `pid`)
 VALUES
@@ -429,12 +428,20 @@ CREATE TABLE `user` (
   UNIQUE KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+# 订阅表
+# ------------------------------------------------------------
 
+DROP TABLE IF EXISTS `subscribe_record`;
 
+CREATE TABLE `subscribe_record` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(32) NOT NULL,
+  `from_user_id` bigint(32) NOT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '1：关注，0：不关注',
+  `created_time` bigint(20) NOT NULL,
+  `updated_time` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `userId` (`user_id`),
+  KEY `fromUserId` (`from_user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

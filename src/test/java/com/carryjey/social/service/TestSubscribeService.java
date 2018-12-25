@@ -1,5 +1,6 @@
-package com.carryjey.social.util;
+package com.carryjey.social.service;
 
+import com.carryjey.social.model.SubscribeRecord;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,19 +8,23 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
+
 /**
  * @author CarryJey
- * @since 2018/12/21
+ * @since 2018/12/25
  */
 @SpringBootTest
 @RunWith(SpringRunner.class)
 @Component
-public class TestRedisUtils {
+public class TestSubscribeService {
+
     @Autowired
-    private RedisUtil redisUtil;
+    private SubscribeService subscribeService;
 
     @Test
-    public void testCon() {
-        redisUtil.setString("test", "001");
+    public void getSubscribeListTest() {
+        List<SubscribeRecord> subscribeRecords = subscribeService.getSubscribeList();
+        System.out.print(subscribeRecords.size() + "\n");
     }
 }
