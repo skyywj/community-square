@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration  scan="true" scanPeriod="60 seconds" debug="false">
-    <contextName>YIIU</contextName>
-    <property name="log.path" value="./logs/log.log" />
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+    <contextName>CaryJey</contextName>
+    <property name="log.path" value="./logs/log.log"/>
     <!--输出到控制台-->
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <!-- <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
@@ -24,14 +24,14 @@
     </appender>
 
     <root level="info">
-        <appender-ref ref="console" />
-        <appender-ref ref="file" />
+        <appender-ref ref="console"/>
+        <appender-ref ref="file"/>
     </root>
 
     <!-- logback为java中的包 -->
-    <logger name="co.yiiu"/>
+    <logger name="com.carryjey.social"/>
     <!--logback.LogbackDemo：类的全路径 -->
-    <logger name="co.yiiu" level="INFO" additivity="false">
+    <logger name="com.carryjey.social" level="INFO" additivity="false">
         <appender-ref ref="console"/>
         <appender-ref ref="file"/>
     </logger>
