@@ -67,9 +67,7 @@ public class FileUtil {
                 + customPath
                 + "/"
                 + fileName
-                + suffix
-                + "?v="
-                + StringUtil.randomNumber(1);
+                + ".jpeg";
         } catch (IOException e) {
             log.error(e.getMessage());
             return null;

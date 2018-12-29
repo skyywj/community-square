@@ -86,8 +86,9 @@ public class User implements Serializable {
         return avatar;
     }
 
-    public void setAvatar(String avatar) {
+    public User setAvatar(String avatar) {
         this.avatar = avatar;
+        return this;
     }
 
     public String getWebsite() {
