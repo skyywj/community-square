@@ -28,7 +28,7 @@
                 <span class="label label-success">精华</span>
                 <span>•</span>
               </#if>
-                            <span><a href="/user/${topic.userName!}">${topic.userName!}</a></span>
+                            <span><a href="/user/${topicUser.username!}">${topicUser.username!}</a></span>
                             <span>•</span>
                             <span>${model.formatDate(topic.inTime)}</span>
                             <span>•</span>
@@ -42,7 +42,7 @@
                         </p>
                     </div>
                     <div class="media-right">
-                        <img src="${topic.userAvatar!}" class="avatar avatar-lg"/>
+                        <img src="${topicUser.avatar!}" class="avatar avatar-lg"/>
                     </div>
                 </div>
             </div>
