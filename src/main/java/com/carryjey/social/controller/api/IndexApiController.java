@@ -7,6 +7,7 @@ import com.carryjey.social.service.UserService;
 import com.carryjey.social.util.CookieUtil;
 import com.carryjey.social.util.FileUtil;
 import com.carryjey.social.util.Result;
+import com.carryjey.social.util.StringUtil;
 import com.carryjey.social.util.bcrypt.BCryptPasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -58,6 +59,7 @@ public class IndexApiController extends BaseApiController {
         ApiAssert.notEmpty(username, "请输入用户名");
         ApiAssert.notEmpty(password, "请输入密码");
         ApiAssert.notEmpty(mail, "请输入邮箱");
+        ApiAssert.isTrue(StringUtil.check(mail, StringUtil.emailRegex), "邮箱格式不正确");
         User user = userService.selectByUsername(username);
         ApiAssert.isNull(user, "用户名已存在");
         user = userService.addUser(username, password, mail);

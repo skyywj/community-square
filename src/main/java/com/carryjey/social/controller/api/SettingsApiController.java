@@ -4,6 +4,7 @@ import com.carryjey.social.exception.ApiAssert;
 import com.carryjey.social.model.Code;
 import com.carryjey.social.model.User;
 import com.carryjey.social.service.CodeService;
+import com.carryjey.social.service.ImStatService;
 import com.carryjey.social.service.SystemConfigService;
 import com.carryjey.social.service.UserService;
 import com.carryjey.social.util.FileUtil;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+
 /**
  * @author CarryJey
  * @since 2018/12/17
@@ -106,13 +109,12 @@ public class SettingsApiController extends BaseApiController {
         if (size > uploadAvatarSizeLimit * 1024 * 1024) {
             return error("文件太大了，请上传文件大小在 " + uploadAvatarSizeLimit + "MB 以内");
         }
-        // 拿到上传后访问的url
-        String url = fileUtil.upload(file, "avatar", "avatar/" + getUser().getUsername());
+        User user = getUser();
+        // 拿到上传后访问的url:localhost:8081/avatar/username/time.jpeg
+        String url = fileUtil.upload(file, String.valueOf(System.currentTimeMillis()), "avatar/" + user.getUsername());
         if (url == null) {
             return error("上传的文件不存在或者上传过程发生了错误，请重试一下");
         }
-        // 查询当前用户的最新信息
-        User user = userService.selectByUserId(getUser().getUserId());
         user.setAvatar(url);
         // 保存用户新的头像
         userService.updateAvatar(user);
