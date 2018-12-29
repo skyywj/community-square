@@ -320,7 +320,7 @@ VALUES
 	(15, 'name', '山科微社交广场平台', '站点名称', 23),
 	(16, 'pageSize', '20', '分页每页条数', 23),
 	(17, 'socketNotification', '0', '是否开启websocket长连接获取通知数量，1：开启，0：关闭', 23),
-	(18, 'staticUrl', 'http://localhost:8080/static/upload/', '静态文件访问地址，主要用于上传图片的访问，注意最后有个\"/\"', 23),
+	(18, 'staticUrl', 'http://localhost:8081/', '静态文件访问地址，主要用于上传图片的访问，注意最后有个\"/\"', 23),
 	(19, 'upCommentScore', '3', '点赞评论奖励评论作者的积分', 26),
 	(20, 'uploadAvatarSizeLimit', '2', '上传头像文件大小，单位MB，默认2MB', 25),
 	(21, 'uploadPath', '/Users/a/Desktop/pics/community-square/static/upload/', '上传文件的路径，注意最后有个\"/\"', 25),
