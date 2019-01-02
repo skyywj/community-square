@@ -32,7 +32,7 @@
         </#list>
         <#if isPaginate>
             <#include "./paginate.ftl"/>
-            <@paginate currentPage=topics.current totalPage=topics.pages actionUrl="/user/${user.username}/topics" urlParas=""/>
+            <@paginate currentPage=topics.current totalPage=topics.pages!1 actionUrl="/user/${user.username}/topics" urlParas=""/>
         </#if>
       </div>
         <#if isFooter>

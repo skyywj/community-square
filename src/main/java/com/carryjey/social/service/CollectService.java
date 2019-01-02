@@ -70,7 +70,7 @@ public class CollectService {
         Topic topic = topicService.selectById(topicId);
         // 收藏自己的话题不发通知
         if (userId != topic.getUserId()) {
-            notificationService.insert(userId, topic.getUserId(), topicId, "COLLECT", null);
+            notificationService.insert(userId, topic.getUserId(), topic, "COLLECT", null);
         }
 
         return collect;
