@@ -1,6 +1,7 @@
-package com.carryjey.social.controller;
+package com.carryjey.social.Dao;
 
-import com.carryjey.social.controller.api.CommentApiController;
+import com.carryjey.social.model.User;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,8 +15,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 @Component
 @RunWith(SpringRunner.class)
-public class CommentAPITest {
+public class UserDaoTest {
 
     @Autowired
-    private CommentApiController commentApiController;
+    private UserDao userDao;
+
+    @Test
+    public void testGetUserById() {
+        User user = userDao.getByUserId(526751214013124608l);
+        System.out.print(user.getUsername() + "\n");
+    }
 }
