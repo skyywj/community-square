@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * @author CarryJey
@@ -23,11 +22,13 @@ public class Notification implements Serializable {
     private long targetUserId;
     // 动作: REPLY, COMMENT, COLLECT, TOPIC_UP, COMMENT_UP
     private String action;
-    private Date inTime;
     private String content;
     // 是否已读
     @TableField("`read`")
     private Boolean read;
+
+    private long createdTime;
+    private long updatedTime;
 
     public String getContent() {
         return content;
@@ -77,19 +78,33 @@ public class Notification implements Serializable {
         this.action = action;
     }
 
-    public Date getInTime() {
-        return inTime;
-    }
-
-    public void setInTime(Date inTime) {
-        this.inTime = inTime;
-    }
-
     public Boolean getRead() {
         return read;
     }
 
     public void setRead(Boolean read) {
         this.read = read;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public long getCreatedTime() {
+        return createdTime;
+    }
+
+    public Notification setCreatedTime(long createdTime) {
+        this.createdTime = createdTime;
+        return this;
+    }
+
+    public long getUpdatedTime() {
+        return updatedTime;
+    }
+
+    public Notification setUpdatedTime(long updatedTime) {
+        this.updatedTime = updatedTime;
+        return this;
     }
 }
