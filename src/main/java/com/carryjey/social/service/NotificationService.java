@@ -3,11 +3,11 @@ package com.carryjey.social.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.carryjey.social.mapper.NotificationMapper;
 import com.carryjey.social.model.Notification;
+import com.carryjey.social.model.Topic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -48,15 +48,16 @@ public class NotificationService {
         notificationMapper.delete(wrapper);
     }
 
-    public void insert(long userId, long targetUserId, Integer topicId, String action, String content) {
+    public void insert(long userId, long targetUserId, Topic topic, String action, String content) {
         Notification notification = new Notification();
         notification.setAction(action);
         notification.setContent(content);
         notification.setUserId(userId);
         notification.setTargetUserId(targetUserId);
-        notification.setTopicId(topicId);
-        notification.setInTime(new Date());
+        notification.setTopicId(topic.getId());
         notification.setRead(false);
+        notification.setCreatedTime(System.currentTimeMillis());
+        notification.setUpdatedTime(System.currentTimeMillis());
         notificationMapper.insert(notification);
     }
 }
