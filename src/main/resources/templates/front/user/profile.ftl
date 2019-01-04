@@ -10,11 +10,11 @@
                     </div>
                     <div class="media-body">
                         <h3 style="margin-top: 0">${user.username!}</h3>
-                        <p>积分：<a href="/top100">${user.score}</a></p>
-            <#if user.bio??>
-              <p><i class="gray">${user.bio!}</i></p>
-            </#if>
-                        <p>收藏话题: <a href="/user/${user.username}/collects">${collectCount!0}</a></p>
+                         <#if user.bio??>
+                            <p><i class="gray">${user.bio!}</i></p>
+                         </#if>
+                        <p>积分：${user.score}</p>
+                        <p><a href="/user/${user.username}/collects">收藏话题: ${collectCount!0}</a></p>
                         <div>入驻时间: ${user.createdTime?number_to_datetime}</div>
                     </div>
                 </div>

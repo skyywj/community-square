@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.carryjey.social.mapper.NotificationMapper;
 import com.carryjey.social.model.Notification;
 import com.carryjey.social.model.Topic;
+import com.carryjey.social.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,10 +24,10 @@ public class NotificationService {
     private NotificationMapper notificationMapper;
 
     // 查询消息
-    public List<Map<String, Object>> selectByUserId(long userId, Boolean read, Integer limit) {
-        List<Map<String, Object>> notifications = notificationMapper.selectByUserId(userId, read, limit);
+    public List<Map<String, Object>> selectByUserId(long toUserId, Boolean read, Integer limit) {
+        List<Map<String, Object>> notifications = notificationMapper.selectByUserId(toUserId, read, limit);
         if (!read) {
-            notificationMapper.updateNotificationStatus(userId);
+            notificationMapper.updateNotificationStatus(toUserId);
         }
         return notifications;
     }
@@ -44,17 +45,20 @@ public class NotificationService {
 
     public void deleteByUserId(long userId) {
         QueryWrapper<Notification> wrapper = new QueryWrapper<>();
-        wrapper.lambda().eq(Notification::getTargetUserId, userId).or().eq(Notification::getUserId, userId);
+        wrapper.lambda().eq(Notification::getToUserId, userId).or().eq(Notification::getToUserId, userId);
         notificationMapper.delete(wrapper);
     }
 
-    public void insert(long userId, long targetUserId, Topic topic, String action, String content) {
+    public void insert(User user, long toUserId, Topic topic, int action, String content) {
         Notification notification = new Notification();
         notification.setAction(action);
         notification.setContent(content);
-        notification.setUserId(userId);
-        notification.setTargetUserId(targetUserId);
+        notification.setFromUserId(user.getUserId());
+        notification.setFromUserAvatar(user.getAvatar());
+        notification.setFromUserName(user.getUsername());
+        notification.setToUserId(toUserId);
         notification.setTopicId(topic.getId());
+        notification.setTopicTitle(topic.getTitle());
         notification.setRead(false);
         notification.setCreatedTime(System.currentTimeMillis());
         notification.setUpdatedTime(System.currentTimeMillis());

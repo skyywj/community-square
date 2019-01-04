@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.carryjey.social.mapper.CollectMapper;
 import com.carryjey.social.model.Collect;
 import com.carryjey.social.model.Topic;
+import com.carryjey.social.model.User;
+import com.carryjey.social.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,18 +61,18 @@ public class CollectService {
     }
 
     // 收藏话题
-    public Collect insert(Integer topicId, long userId) {
+    public Collect insert(Integer topicId, User user) {
         Collect collect = new Collect();
         collect.setTopicId(topicId);
-        collect.setUserId(userId);
+        collect.setUserId(user.getUserId());
         collect.setInTime(new Date());
         collectMapper.insert(collect);
 
         // 通知
         Topic topic = topicService.selectById(topicId);
         // 收藏自己的话题不发通知
-        if (userId != topic.getUserId()) {
-            notificationService.insert(userId, topic.getUserId(), topic, "COLLECT", null);
+        if (user.getUserId() != topic.getUserId()) {
+            notificationService.insert(user, topic.getUserId(), topic, Constants.COLLECT, null);
         }
 
         return collect;

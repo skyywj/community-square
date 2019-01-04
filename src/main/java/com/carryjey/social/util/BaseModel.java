@@ -43,8 +43,22 @@ public class BaseModel {
         if (date == null) {
             return "";
         }
-
         long offset = System.currentTimeMillis() - date.getTime();
+        return restTime(offset);
+    }
+
+    /**
+     * 过渡转换使用，以后库中只存long型时间
+     *
+     * @param time
+     * @return
+     */
+    public String formatDate(long time) {
+        long offset = System.currentTimeMillis() - time;
+        return restTime(offset);
+    }
+
+    public String restTime(long offset) {
         if (offset > YEAR) {
             return (offset / YEAR) + "年前";
         } else if (offset > MONTH) {

@@ -111,16 +111,20 @@ DROP TABLE IF EXISTS `notification`;
 CREATE TABLE `notification` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `topic_id` int(11) NOT NULL,
-  `user_id` bigint(32) NOT NULL,
-  `target_user_id` bigint(32) NOT NULL,
-  `action` varchar(255) NOT NULL DEFAULT '',
-  `in_time` datetime NOT NULL,
+  `topic_title` varchar (256) NOT NULL,
+  `from_user_id` bigint(32) NOT NULL,
+  `from_user_avatar` varchar (1024) NOT NULL,
+  `from_user_name` varchar (256) NOT NULL,
+  `to_user_id` bigint(32) NOT NULL,
+  `action` int(11) NOT NULL DEFAULT '',
   `read` bit(1) NOT NULL DEFAULT b'0',
   `content` longtext,
+  `created_time` bigint(20) NOT NULL,
+  `updated_time` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `topic_id` (`topic_id`),
-  KEY `user_id` (`user_id`),
-  KEY `target_user_id` (`target_user_id`)
+  KEY `from_user_id` (`from_user_id`),
+  KEY `to_user_id` (`to_user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 

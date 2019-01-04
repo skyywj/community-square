@@ -20,4 +20,10 @@ public abstract class Constants {
     public static final int OPEN_SUBSCRIBE_STATUS = 1;
 
     public static final int CLOSE_SUBSCRIBE_STATUS = 0;
+
+    public static final int COMMENT = 0;
+    public static final int REPLY = 1;
+    public static final int COLLECT = 2;
+    public static final int VOTE_TOPIC = 3;
+    public static final int VOTE_COMMENT = 4;
 }

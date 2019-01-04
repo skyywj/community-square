@@ -8,6 +8,7 @@ import com.carryjey.social.model.Tag;
 import com.carryjey.social.model.Topic;
 import com.carryjey.social.model.TopicTag;
 import com.carryjey.social.model.User;
+import com.carryjey.social.util.Constants;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -210,6 +211,7 @@ public class TopicService {
         this.update(topic);
         // 增加用户积分
         user.setScore(userScore);
+        notificationService.insert(user, topic.getUserId(), topic, Constants.VOTE_TOPIC, "");
         userService.update(user);
         if (session != null) {
             session.setAttribute("_user", user);
