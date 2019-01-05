@@ -12,6 +12,7 @@ import com.carryjey.social.util.Constants;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -54,6 +55,9 @@ public class TopicService {
 
     @Autowired
     private NotificationService notificationService;
+
+    @Autowired
+    private StringRedisTemplate redisTemplate;
 
     public IPage<Map<String, Object>> selectAll(Integer pageNo, String tab) {
         IPage<Map<String, Object>> iPage =
@@ -110,10 +114,14 @@ public class TopicService {
         topic.setCreatedTime(System.currentTimeMillis());
         topic.setUpdatedTime(System.currentTimeMillis());
         topicMapper.insert(topic);
+        Integer createTopicScore =
+            Integer.parseInt(systemConfigService.selectAllConfig().get("createTopicScore").toString());
         // 增加用户积分
-        user.setScore(
-            user.getScore()
-                + Integer.parseInt(systemConfigService.selectAllConfig().get("createTopicScore").toString()));
+        user.setScore(user.getScore() + createTopicScore);
+        //先更新缓存，再更新数据库，保证排行榜数据最新
+        redisTemplate
+            .opsForZSet()
+            .incrementScore(Constants.REDIS_SCORE_RANK_LIST_KEY, user.getUsername(), createTopicScore);
         userService.update(user);
         if (session != null) {
             session.setAttribute("_user", user);
@@ -165,9 +173,13 @@ public class TopicService {
         topicTagService.deleteByTopicId(id);
         // 减去用户积分
         User user = userService.selectByUserId(topic.getUserId());
-        user.setScore(
-            user.getScore()
-                - Integer.parseInt(systemConfigService.selectAllConfig().get("deleteTopicScore").toString()));
+        Integer deleteTopicScore =
+            Integer.parseInt(systemConfigService.selectAllConfig().get("deleteTopicScore").toString());
+        user.setScore(user.getScore() - deleteTopicScore);
+        //先更新缓存，再更新数据库，保证排行榜数据最新
+        redisTemplate
+            .opsForZSet()
+            .incrementScore(Constants.REDIS_SCORE_RANK_LIST_KEY, user.getUsername(), deleteTopicScore);
         userService.update(user);
         if (session != null) {
             session.setAttribute("_user", user);
@@ -198,12 +210,13 @@ public class TopicService {
         Set<String> strings = StringUtils.commaDelimitedListToSet(upIds);
         // 把新的点赞用户id添加进集合，这里用set，正好可以去重，如果集合里已经有用户的id了，那么这次动作被视为取消点赞
         Integer userScore = user.getScore();
+        Integer upTopicScore = Integer.parseInt(systemConfigService.selectAllConfig().get("upTopicScore").toString());
         if (strings.contains(String.valueOf(user.getUserId()))) { // 取消点赞行为
             strings.remove(String.valueOf(user.getUserId()));
-            userScore -= Integer.parseInt(systemConfigService.selectAllConfig().get("upTopicScore").toString());
+            userScore -= upTopicScore;
         } else { // 点赞行为
             strings.add(String.valueOf(user.getUserId()));
-            userScore += Integer.parseInt(systemConfigService.selectAllConfig().get("upTopicScore").toString());
+            userScore += upTopicScore;
         }
         // 再把这些id按逗号隔开组成字符串
         topic.setUpIds(StringUtils.collectionToCommaDelimitedString(strings));
@@ -212,6 +225,10 @@ public class TopicService {
         // 增加用户积分
         user.setScore(userScore);
         notificationService.insert(user, topic.getUserId(), topic, Constants.VOTE_TOPIC, "");
+        //先更新缓存，再更新数据库，保证排行榜数据最新
+        redisTemplate
+            .opsForZSet()
+            .incrementScore(Constants.REDIS_SCORE_RANK_LIST_KEY, user.getUsername(), upTopicScore);
         userService.update(user);
         if (session != null) {
             session.setAttribute("_user", user);

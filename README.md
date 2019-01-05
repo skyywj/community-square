@@ -31,4 +31,8 @@
 
 对于上线业务，最好的方式就是将静态资源存储到oss上，利用CDN进行加速。
 
+## 关于排行榜相关逻辑
 
+### 实现方式：利用redis的sorted set有序表实现，快速，高效
+
+[关于redis的sorted使用](http://www.carryjey.club/article/17)

@@ -9,6 +9,7 @@ import com.carryjey.social.model.Topic;
 import com.carryjey.social.model.User;
 import com.carryjey.social.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -41,6 +42,9 @@ public class CommentService {
 
     @Autowired
     private NotificationService notificationService;
+
+    @Autowired
+    private StringRedisTemplate redisTemplate;
 
     // 根据话题id查询评论
     public List<Map<String, Object>> selectByTopicId(Integer topicId) {
@@ -84,11 +88,16 @@ public class CommentService {
         topic.setCommentCount(topic.getCommentCount() + 1);
         topicService.update(topic);
 
+        Integer createCommentScore =
+            Integer.parseInt(systemConfigService.selectAllConfig().get("createCommentScore").toString());
         // 增加用户积分
-        user.setScore(
-            user.getScore()
-                + Integer.parseInt(systemConfigService.selectAllConfig().get("createCommentScore").toString()));
+        user.setScore(user.getScore() + createCommentScore);
+        //先更新缓存再更新数据库，保证排行榜数据最新
+        redisTemplate
+            .opsForZSet()
+            .incrementScore(Constants.REDIS_SCORE_RANK_LIST_KEY, user.getUsername(), createCommentScore);
         userService.update(user);
+
         if (session != null) {
             session.setAttribute("_user", user);
         }
@@ -127,12 +136,14 @@ public class CommentService {
         Set<String> strings = StringUtils.commaDelimitedListToSet(upIds);
         // 把新的点赞用户id添加进集合，这里用set，正好可以去重，如果集合里已经有用户的id了，那么这次动作被视为取消点赞
         Integer userScore = user.getScore();
+        Integer upCommentScore =
+            Integer.parseInt(systemConfigService.selectAllConfig().get("upCommentScore").toString());
         if (strings.contains(String.valueOf(user.getUserId()))) { // 取消点赞行为
             strings.remove(String.valueOf(user.getUserId()));
-            userScore -= Integer.parseInt(systemConfigService.selectAllConfig().get("upCommentScore").toString());
+            userScore -= upCommentScore;
         } else { // 点赞行为
             strings.add(String.valueOf(user.getUserId()));
-            userScore += Integer.parseInt(systemConfigService.selectAllConfig().get("upCommentScore").toString());
+            userScore += upCommentScore;
         }
         // 再把这些id按逗号隔开组成字符串
         comment.setUpIds(StringUtils.collectionToCommaDelimitedString(strings));
@@ -140,7 +151,12 @@ public class CommentService {
         this.update(comment);
         // 增加用户积分
         user.setScore(userScore);
+        //先更新缓存再更新数据库，保证排行榜数据最新
+        redisTemplate
+            .opsForZSet()
+            .incrementScore(Constants.REDIS_SCORE_RANK_LIST_KEY, user.getUsername(), upCommentScore);
         userService.update(user);
+
         Topic topic = topicService.selectById(comment.getTopicId());
         notificationService.insert(user, comment.getUserId(), topic, Constants.VOTE_COMMENT, "");
         if (session != null) {
@@ -159,10 +175,15 @@ public class CommentService {
             topicService.update(topic);
             // 减去用户积分
             User user = userService.selectByUserId(comment.getUserId());
-            user.setScore(
-                user.getScore()
-                    - Integer.parseInt(systemConfigService.selectAllConfig().get("deleteCommentScore").toString()));
+            Integer deleteCommentScore =
+                Integer.parseInt(systemConfigService.selectAllConfig().get("deleteCommentScore").toString());
+            user.setScore(user.getScore() - deleteCommentScore);
+            //先更新缓存再更新数据库，保证排行榜数据最新
+            redisTemplate
+                .opsForZSet()
+                .incrementScore(Constants.REDIS_SCORE_RANK_LIST_KEY, user.getUsername(), -deleteCommentScore);
             userService.update(user);
+
             if (session != null) {
                 session.setAttribute("_user", user);
             }

@@ -5,10 +5,14 @@ package com.carryjey.social.util;
  */
 public abstract class Constants {
 
+    private Constants() {}
+
     /**
-     * 字段名字常量定义
+     * 字段名字常量定义 redis命名
      */
     public static final String REDIS_SYSTEM_CONFIG_KEY = "system_config";
+
+    public static final String REDIS_SCORE_RANK_LIST_KEY = "score_rank_list";
 
     public static final String FIELD_NAME_USER_ID = "userId";
     public static final String FIELD_NAME_UPDATED_TIME = "updatedTime";

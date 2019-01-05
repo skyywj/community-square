@@ -14,6 +14,10 @@ import redis.clients.jedis.JedisPoolConfig;
 /**
  * Created by tomoya at 2018/12/17
  */
+
+/**
+ * redis已经封装好了，不用自己再封装一遍了 已弃用，保留代码
+ */
 @Component
 public class RedisUtil {
 

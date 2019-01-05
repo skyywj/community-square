@@ -5,8 +5,8 @@ import com.carryjey.social.mapper.SystemConfigMapper;
 import com.carryjey.social.model.SystemConfig;
 import com.carryjey.social.util.Constants;
 import com.carryjey.social.util.JsonUtil;
-import com.carryjey.social.util.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -30,10 +30,10 @@ public class SystemConfigService {
     private SystemConfigMapper systemConfigMapper;
 
     @Autowired
-    private RedisUtil redisUtil;
+    private StringRedisTemplate redisTemplate;
 
     public Map selectAllConfig() {
-        String system_config = redisUtil.getString(Constants.REDIS_SYSTEM_CONFIG_KEY);
+        String system_config = redisTemplate.opsForValue().get(Constants.REDIS_SYSTEM_CONFIG_KEY);
         if (system_config != null) {
             return JsonUtil.jsonToObject(system_config, Map.class);
         } else {
@@ -44,7 +44,7 @@ public class SystemConfigService {
                 .filter(systemConfig -> systemConfig.getPid() != 0)
                 .forEach(systemConfig -> map.put(systemConfig.getKey(), systemConfig.getValue()));
             // 将查询出来的数据放到redis里缓存下来（如果redis可用的话）
-            redisUtil.setString(Constants.REDIS_SYSTEM_CONFIG_KEY, JsonUtil.objectToJson(map));
+            redisTemplate.opsForValue().set(Constants.REDIS_SYSTEM_CONFIG_KEY, JsonUtil.objectToJson(map));
             return map;
         }
     }
@@ -85,12 +85,8 @@ public class SystemConfigService {
             wrapper.lambda().eq(SystemConfig::getKey, systemConfig.getKey());
             systemConfigMapper.update(systemConfig, wrapper);
         }
-        // 判断redis配置是否去除，去除了，就将RedisUtil里的jedis属性设置为null
-        if (!this.isRedisConfig()) {
-            redisUtil.setJedis(null);
-        }
         // 清除redis里关于 system_config 的缓存
-        redisUtil.delString(Constants.REDIS_SYSTEM_CONFIG_KEY);
+        redisTemplate.delete(Constants.REDIS_SYSTEM_CONFIG_KEY);
         return null;
     }
 

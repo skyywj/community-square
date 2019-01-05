@@ -6,13 +6,19 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.carryjey.social.Dao.UserDao;
 import com.carryjey.social.mapper.UserMapper;
 import com.carryjey.social.model.User;
+import com.carryjey.social.util.Constants;
 import com.carryjey.social.util.bcrypt.BCryptPasswordEncoder;
 import com.carryjey.social.util.identicon.Identicon;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -43,6 +49,9 @@ public class UserService {
 
     @Autowired
     private SystemConfigService systemConfigService;
+
+    @Autowired
+    private StringRedisTemplate redisTemplate;
 
     @Autowired
     private UserDao userDao;
@@ -98,9 +107,19 @@ public class UserService {
 
     // 查询用户积分榜
     public List<User> selectTop(Integer limit) {
-        QueryWrapper<User> wrapper = new QueryWrapper<>();
-        wrapper.orderByDesc("score").last("limit " + limit);
-        return userMapper.selectList(wrapper);
+        List<User> rankList = new ArrayList<>();
+        ZSetOperations zSetOperations = redisTemplate.opsForZSet();
+        Set<ZSetOperations.TypedTuple<Object>> rankSet =
+            zSetOperations.reverseRangeByScoreWithScores(Constants.REDIS_SCORE_RANK_LIST_KEY, 0, limit);
+        Iterator iterator = rankSet.iterator();
+        while (iterator.hasNext()) {
+            ZSetOperations.TypedTuple<Object> res = (ZSetOperations.TypedTuple<Object>) iterator.next();
+            User user = new User();
+            user.setUsername((String) res.getValue());
+            user.setScore(res.getScore().intValue());
+            rankList.add(user);
+        }
+        return rankList;
     }
 
     public void update(User user) {
