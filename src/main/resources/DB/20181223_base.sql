@@ -111,16 +111,20 @@ DROP TABLE IF EXISTS `notification`;
 CREATE TABLE `notification` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `topic_id` int(11) NOT NULL,
-  `user_id` bigint(32) NOT NULL,
-  `target_user_id` bigint(32) NOT NULL,
-  `action` varchar(255) NOT NULL DEFAULT '',
-  `in_time` datetime NOT NULL,
+  `topic_title` varchar (256) NOT NULL,
+  `from_user_id` bigint(32) NOT NULL,
+  `from_user_avatar` varchar (1024) NOT NULL,
+  `from_user_name` varchar (256) NOT NULL,
+  `to_user_id` bigint(32) NOT NULL,
+  `action` int(11) NOT NULL DEFAULT '0',
   `read` bit(1) NOT NULL DEFAULT b'0',
   `content` longtext,
+  `created_time` bigint(20) NOT NULL,
+  `updated_time` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `topic_id` (`topic_id`),
-  KEY `user_id` (`user_id`),
-  KEY `target_user_id` (`target_user_id`)
+  KEY `from_user_id` (`from_user_id`),
+  KEY `to_user_id` (`to_user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -323,7 +327,7 @@ VALUES
 	(18, 'staticUrl', 'http://localhost:8081/', '静态文件访问地址，主要用于上传图片的访问，注意最后有个\"/\"', 23),
 	(19, 'upCommentScore', '3', '点赞评论奖励评论作者的积分', 26),
 	(20, 'uploadAvatarSizeLimit', '2', '上传头像文件大小，单位MB，默认2MB', 25),
-	(21, 'uploadPath', '/Users/a/Desktop/pics/community-square/static/upload/', '上传文件的路径，注意最后有个\"/\"', 25),
+	(21, 'uploadPath', '/Users/a/Documents`/pics/community-square/static/upload/', '上传文件的路径，注意最后有个\"/\"', 25),
 	(22, 'upTopicScore', '3', '点赞话题奖励话题作者的积分', 26),
 	(23, NULL, NULL, '基础配置', 0),
 	(24, NULL, NULL, '邮箱配置', 0),

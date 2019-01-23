@@ -2,10 +2,10 @@ package com.carryjey.social.controller.api;
 
 import com.carryjey.social.exception.ApiAssert;
 import com.carryjey.social.model.User;
+import com.carryjey.social.service.RateLimitingService;
 import com.carryjey.social.service.SystemConfigService;
 import com.carryjey.social.service.UserService;
 import com.carryjey.social.util.CookieUtil;
-import com.carryjey.social.util.FileUtil;
 import com.carryjey.social.util.Result;
 import com.carryjey.social.util.StringUtil;
 import com.carryjey.social.util.bcrypt.BCryptPasswordEncoder;
@@ -34,7 +34,7 @@ public class IndexApiController extends BaseApiController {
     private CookieUtil cookieUtil;
 
     @Autowired
-    private FileUtil fileUtil;
+    private RateLimitingService rateLimitingService;
 
     // 处理登录的接口
     @PostMapping("/login")
@@ -44,6 +44,9 @@ public class IndexApiController extends BaseApiController {
         User user = userService.selectByUsername(username);
         ApiAssert.notNull(user, "用户不存在");
         ApiAssert.isTrue(new BCryptPasswordEncoder().matches(password, user.getPassword()), "用户名或密码不正确");
+        //限频
+        rateLimitingService.checkLogin(user.getUserId());
+
         // 将用户信息写session
         if (session != null) {
             session.setAttribute("_user", user);

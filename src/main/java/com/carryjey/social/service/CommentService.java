@@ -7,6 +7,7 @@ import com.carryjey.social.mapper.CommentMapper;
 import com.carryjey.social.model.Comment;
 import com.carryjey.social.model.Topic;
 import com.carryjey.social.model.User;
+import com.carryjey.social.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -97,12 +98,12 @@ public class CommentService {
         if (commentId != null) {
             Comment targetComment = this.selectById(commentId);
             if (user.getUserId() != targetComment.getUserId()) {
-                notificationService.insert(user.getUserId(), targetComment.getUserId(), topic, "REPLY", content);
+                notificationService.insert(user, targetComment.getUserId(), topic, Constants.COMMENT, content);
             }
         }
         // 给话题作者发通知
         if (user.getUserId() != topic.getUserId()) {
-            notificationService.insert(user.getUserId(), topic.getUserId(), topic, "COMMENT", content);
+            notificationService.insert(user, topic.getUserId(), topic, Constants.REPLY, content);
         }
 
         // 日志 TODO
@@ -140,6 +141,8 @@ public class CommentService {
         // 增加用户积分
         user.setScore(userScore);
         userService.update(user);
+        Topic topic = topicService.selectById(comment.getTopicId());
+        notificationService.insert(user, comment.getUserId(), topic, Constants.VOTE_COMMENT, "");
         if (session != null) {
             session.setAttribute("_user", user);
         }

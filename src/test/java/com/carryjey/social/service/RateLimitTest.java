@@ -1,6 +1,6 @@
-package com.carryjey.social.controller;
+package com.carryjey.social.service;
 
-import com.carryjey.social.controller.api.CommentApiController;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -8,15 +8,18 @@ import org.springframework.stereotype.Component;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
-
- * @author CarryJey
- * @since 2019/1/2
+ * @author yanwenjie
+ * @since 2019/1/7
  */
 @SpringBootTest
 @Component
 @RunWith(SpringRunner.class)
-public class CommentAPITest {
-
+public class RateLimitTest {
     @Autowired
-    private CommentApiController commentApiController;
+    private RateLimitingService rateLimitingService;
+
+    @Test
+    public void testLimitLogin() {
+        rateLimitingService.checkLogin(526751214013124608l);
+    }
 }

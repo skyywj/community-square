@@ -2,6 +2,7 @@ package com.carryjey.social.controller.api;
 
 import com.carryjey.social.exception.ApiAssert;
 import com.carryjey.social.model.Topic;
+import com.carryjey.social.model.User;
 import com.carryjey.social.service.TopicService;
 import com.carryjey.social.util.Result;
 import com.carryjey.social.util.StringUtil;
@@ -67,9 +68,10 @@ public class TopicApiController extends BaseApiController {
 
     @GetMapping("/vote")
     public Result vote(Integer id, HttpSession session) {
+        User user = getUser();
         Topic topic = topicService.selectById(id);
         ApiAssert.notNull(topic, "这个话题可能已经被删除了");
-        ApiAssert.notTrue(topic.getUserId() == getUser().getUserId(), "给自己话题点赞，脸皮真厚！！");
+        ApiAssert.notTrue(topic.getUserId() == user.getUserId(), "给自己话题点赞，脸皮真厚！！");
         int voteCount = topicService.vote(topic, getUser(), session);
         return success(voteCount);
     }
