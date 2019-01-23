@@ -80,4 +80,8 @@ public class ApiAssert extends Assert {
             throw new ApiException(code, message);
         }
     }
+
+    public static void newStatusException(int code,String msg){
+        throw new ApiException(code,msg);
+    }
 }
