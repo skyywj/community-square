@@ -148,25 +148,4 @@ public class Notification implements Serializable {
         return this;
     }
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
-
-    public long getCreatedTime() {
-        return createdTime;
-    }
-
-    public Notification setCreatedTime(long createdTime) {
-        this.createdTime = createdTime;
-        return this;
-    }
-
-    public long getUpdatedTime() {
-        return updatedTime;
-    }
-
-    public Notification setUpdatedTime(long updatedTime) {
-        this.updatedTime = updatedTime;
-        return this;
-    }
 }

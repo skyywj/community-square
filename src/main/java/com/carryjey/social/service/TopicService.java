@@ -4,10 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.carryjey.social.mapper.TopicMapper;
-import com.carryjey.social.model.Tag;
-import com.carryjey.social.model.Topic;
-import com.carryjey.social.model.TopicTag;
-import com.carryjey.social.model.User;
+import com.carryjey.social.model.*;
 import com.carryjey.social.util.Constants;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
@@ -57,7 +54,7 @@ public class TopicService {
 
     public IPage<Map<String, Object>> selectAll(Integer pageNo, String tab) {
         IPage<Map<String, Object>> iPage =
-            new Page<>(pageNo, Integer.parseInt(systemConfigService.selectAllConfig().get("pageSize").toString()));
+                new Page<>(pageNo, Integer.parseInt(systemConfigService.selectAllConfig().get("pageSize").toString()));
         IPage<Map<String, Object>> page = topicMapper.selectAll(iPage, tab);
         selectTags(page, topicTagService, tagService);
         return page;
@@ -65,13 +62,13 @@ public class TopicService {
 
     public void selectTags(IPage<Map<String, Object>> page, TopicTagService topicTagService, TagService tagService) {
         page.getRecords()
-            .forEach(
-                map -> {
-                    List<TopicTag> topicTags = topicTagService.selectByTopicId((Integer) map.get("id"));
-                    List<Integer> tagIds = topicTags.stream().map(TopicTag::getTagId).collect(Collectors.toList());
-                    List<Tag> tags = tagService.selectByIds(tagIds);
-                    map.put("tags", tags);
-                });
+                .forEach(
+                        map -> {
+                            List<TopicTag> topicTags = topicTagService.selectByTopicId((Integer) map.get("id"));
+                            List<Integer> tagIds = topicTags.stream().map(TopicTag::getTagId).collect(Collectors.toList());
+                            List<Tag> tags = tagService.selectByIds(tagIds);
+                            map.put("tags", tags);
+                        });
     }
 
     // 查询话题作者其它的话题
@@ -90,11 +87,11 @@ public class TopicService {
     // 查询用户的话题
     public IPage<Map<String, Object>> selectByUserId(long userId, Integer pageNo, Integer pageSize) {
         IPage<Map<String, Object>> iPage =
-            new Page<>(
-                pageNo,
-                pageSize == null
-                    ? Integer.parseInt(systemConfigService.selectAllConfig().get("pageSize").toString())
-                    : pageSize);
+                new Page<>(
+                        pageNo,
+                        pageSize == null
+                                ? Integer.parseInt(systemConfigService.selectAllConfig().get("pageSize").toString())
+                                : pageSize);
         return topicMapper.selectByUserId(iPage, userId);
     }
 
@@ -112,8 +109,8 @@ public class TopicService {
         topicMapper.insert(topic);
         // 增加用户积分
         user.setScore(
-            user.getScore()
-                + Integer.parseInt(systemConfigService.selectAllConfig().get("createTopicScore").toString()));
+                user.getScore()
+                        + Integer.parseInt(systemConfigService.selectAllConfig().get("createTopicScore").toString()));
         userService.update(user);
         if (session != null) {
             session.setAttribute("_user", user);
@@ -166,8 +163,8 @@ public class TopicService {
         // 减去用户积分
         User user = userService.selectByUserId(topic.getUserId());
         user.setScore(
-            user.getScore()
-                - Integer.parseInt(systemConfigService.selectAllConfig().get("deleteTopicScore").toString()));
+                user.getScore()
+                        - Integer.parseInt(systemConfigService.selectAllConfig().get("deleteTopicScore").toString()));
         userService.update(user);
         if (session != null) {
             session.setAttribute("_user", user);
@@ -186,9 +183,9 @@ public class TopicService {
     // ---------------------------- admin ----------------------------
 
     public IPage<Map<String, Object>> selectAllForAdmin(
-        Integer pageNo, String startDate, String endDate, String username) {
+            Integer pageNo, String startDate, String endDate, String username) {
         IPage<Map<String, Object>> iPage =
-            new Page<>(pageNo, Integer.parseInt((String) systemConfigService.selectAllConfig().get("pageSize")));
+                new Page<>(pageNo, Integer.parseInt((String) systemConfigService.selectAllConfig().get("pageSize")));
         return topicMapper.selectAllForAdmin(iPage, startDate, endDate, username);
     }
 
@@ -201,17 +198,23 @@ public class TopicService {
         if (strings.contains(String.valueOf(user.getUserId()))) { // 取消点赞行为
             strings.remove(String.valueOf(user.getUserId()));
             userScore -= Integer.parseInt(systemConfigService.selectAllConfig().get("upTopicScore").toString());
+            notificationService.cancelNotification(topic.getId(), user.getUserId(), topic.getUserId(), Constants.VOTE_TOPIC);
         } else { // 点赞行为
             strings.add(String.valueOf(user.getUserId()));
             userScore += Integer.parseInt(systemConfigService.selectAllConfig().get("upTopicScore").toString());
+            List<Notification> notifications = notificationService.getNotification(topic.getId(), user.getUserId(), topic.getUserId(), Constants.VOTE_TOPIC);
+            if (notifications.size() > 0) {
+                notificationService.updateNotificationTime(topic.getId(), user.getUserId(), topic.getUserId(), Constants.VOTE_TOPIC);
+            } else {
+                notificationService.insert(user, topic.getUserId(), topic, Constants.VOTE_TOPIC, "");
+            }
         }
         // 再把这些id按逗号隔开组成字符串
         topic.setUpIds(StringUtils.collectionToCommaDelimitedString(strings));
-        // 更新评论
+        // 更新帖子点赞
         this.update(topic);
-        // 增加用户积分
+        // 更新积分
         user.setScore(userScore);
-        notificationService.insert(user, topic.getUserId(), topic, Constants.VOTE_TOPIC, "");
         userService.update(user);
         if (session != null) {
             session.setAttribute("_user", user);

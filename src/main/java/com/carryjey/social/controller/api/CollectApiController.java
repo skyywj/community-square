@@ -32,7 +32,7 @@ public class CollectApiController extends BaseApiController {
     // 取消收藏
     @GetMapping("/delete")
     public Result delete(Integer topicId) {
-        Collect collect = collectService.selectByTopicIdAndUserId(topicId, getUser().getId());
+        Collect collect = collectService.selectByTopicIdAndUserId(topicId, getUser().getUserId());
         ApiAssert.notNull(collect, "你都没有收藏这个话题，哪来的取消？");
         collectService.delete(topicId, getUser().getUserId());
         return success();

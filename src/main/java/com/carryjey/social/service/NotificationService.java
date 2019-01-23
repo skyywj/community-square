@@ -32,6 +32,7 @@ public class NotificationService {
         return notifications;
     }
 
+
     // 查询未读消息数量
     public long countNotRead(long userId) {
         return notificationMapper.countNotRead(userId);
@@ -64,5 +65,18 @@ public class NotificationService {
         notification.setCreatedTime(System.currentTimeMillis());
         notification.setUpdatedTime(System.currentTimeMillis());
         notificationMapper.insert(notification);
+    }
+
+    public List<Notification> getNotification(long topicId, long fromUserId, long toUserId, int action) {
+        List<Notification> notifications = notificationMapper.getNotification(topicId, fromUserId, toUserId, action);
+        return notifications;
+    }
+
+    public void updateNotificationTime(long topicId, long fromUserId, long toUserId, int action) {
+        notificationMapper.updateNotification(topicId, fromUserId, toUserId, action, System.currentTimeMillis());
+    }
+
+    public void cancelNotification(long topicId, long fromUserId, long toUserId, int action) {
+        notificationMapper.cancelNotification(topicId,fromUserId,toUserId,action);
     }
 }
