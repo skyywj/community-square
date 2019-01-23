@@ -71,6 +71,7 @@ public class CollectService {
         // 通知
         Topic topic = topicService.selectById(topicId);
         // 收藏自己的话题不发通知
+
         if (user.getUserId() != topic.getUserId()) {
             notificationService.insert(user, topic.getUserId(), topic, Constants.COLLECT, null);
         }

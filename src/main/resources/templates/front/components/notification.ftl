@@ -3,6 +3,7 @@
         <#list notifications as notification>
       <div class="media">
           <div class="media-left">
+
               <img src="${notification.fromUserAvatar!}" class="avatar avatar-sm">
           </div>
           <div class="media-body">

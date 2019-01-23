@@ -49,6 +49,7 @@ public class NotificationService {
         notificationMapper.delete(wrapper);
     }
 
+
     public void insert(User user, long toUserId, Topic topic, int action, String content) {
         Notification notification = new Notification();
         notification.setAction(action);
