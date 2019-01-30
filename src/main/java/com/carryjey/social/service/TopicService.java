@@ -127,6 +127,11 @@ public class TopicService {
         return topicMapper.selectById(id);
     }
 
+    public int selectByTitle(String title){
+        List<Topic> topics = topicMapper.selectByTitle(title);
+        return topics.size();
+    }
+
     // 更新话题
     public void update(Topic topic) {
         topicMapper.updateById(topic);
