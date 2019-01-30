@@ -37,7 +37,7 @@ public class TopicApiController extends BaseApiController {
         //保存话题
         // 再次将tag转成逗号隔开的字符串
         tags = StringUtils.collectionToCommaDelimitedString(set);
-        ApiAssert.notTrue(topicService.selectByTitle(title) > 0, "该标题已存在，请换一个的标题吧-_-");
+        ApiAssert.notTrue(topicService.selectByTitle(title) > 0, "该标题已存在，请换一个的标题吧");
         Topic topic = topicService.insertTopic(title, content, tags, getUser(), session);
         return success(topic);
     }
