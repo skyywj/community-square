@@ -1,8 +1,10 @@
-package com.carryjey.social.service;
+package com.carryjey.social.service.impl;
 
 import com.carryjey.social.mapper.RoleMapper;
 import com.carryjey.social.model.Role;
 import com.carryjey.social.model.RolePermission;
+import com.carryjey.social.service.inf.RolePermissionService;
+import com.carryjey.social.service.inf.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +17,7 @@ import java.util.List;
  */
 @Service
 @Transactional
-public class RoleService {
+public class RoleServiceImpl implements RoleService {
 
     @Autowired
     private RoleMapper roleMapper;
@@ -23,14 +25,17 @@ public class RoleService {
     @Autowired
     private RolePermissionService rolePermissionService;
 
+    @Override
     public Role selectById(Integer roleId) {
         return roleMapper.selectById(roleId);
     }
 
+    @Override
     public List<Role> selectAll() {
         return roleMapper.selectList(null);
     }
 
+    @Override
     public void insert(String name, Integer[] permissionIds) {
         Role role = new Role();
         role.setName(name);
@@ -38,6 +43,7 @@ public class RoleService {
         insertRolePermissions(role, permissionIds);
     }
 
+    @Override
     public void update(Integer id, String name, Integer[] permissionIds) {
         // 更新role
         Role role = this.selectById(id);
@@ -58,6 +64,7 @@ public class RoleService {
         }
     }
 
+    @Override
     public void delete(Integer id) {
         // 删除关联关系
         rolePermissionService.deleteByRoleId(id);

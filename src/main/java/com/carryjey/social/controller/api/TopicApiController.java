@@ -3,7 +3,7 @@ package com.carryjey.social.controller.api;
 import com.carryjey.social.exception.ApiAssert;
 import com.carryjey.social.model.Topic;
 import com.carryjey.social.model.User;
-import com.carryjey.social.service.TopicService;
+import com.carryjey.social.service.inf.TopicService;
 import com.carryjey.social.util.Result;
 import com.carryjey.social.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,6 @@
 package com.carryjey.social.directive;
 
-import com.carryjey.social.service.NotificationService;
+import com.carryjey.social.service.inf.NotificationService;
 import freemarker.core.Environment;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapperBuilder;

@@ -2,9 +2,9 @@ package com.carryjey.social.controller.api;
 
 import com.carryjey.social.exception.ApiAssert;
 import com.carryjey.social.model.User;
-import com.carryjey.social.service.RateLimitingService;
-import com.carryjey.social.service.SystemConfigService;
-import com.carryjey.social.service.UserService;
+import com.carryjey.social.service.inf.RateLimitingService;
+import com.carryjey.social.service.inf.SystemConfigService;
+import com.carryjey.social.service.inf.UserService;
 import com.carryjey.social.util.CookieUtil;
 import com.carryjey.social.util.Result;
 import com.carryjey.social.util.StringUtil;

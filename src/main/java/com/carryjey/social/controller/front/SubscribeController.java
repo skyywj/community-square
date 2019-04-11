@@ -1,7 +1,7 @@
 package com.carryjey.social.controller.front;
 
 import com.carryjey.social.model.SubscribeRecord;
-import com.carryjey.social.service.SubscribeService;
+import com.carryjey.social.service.impl.SubscribeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

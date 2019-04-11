@@ -2,7 +2,7 @@ package com.carryjey.social.controller.admin;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.carryjey.social.model.User;
-import com.carryjey.social.service.UserService;
+import com.carryjey.social.service.inf.UserService;
 import com.carryjey.social.util.Result;
 import com.carryjey.social.util.StringUtil;
 import com.carryjey.social.util.bcrypt.BCryptPasswordEncoder;

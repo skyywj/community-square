@@ -1,10 +1,11 @@
-package com.carryjey.social.service;
+package com.carryjey.social.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.carryjey.social.mapper.TopicMapper;
 import com.carryjey.social.model.*;
+import com.carryjey.social.service.inf.*;
 import com.carryjey.social.util.Constants;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
@@ -26,7 +27,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @Transactional
-public class TopicService {
+public class TopicServiceImpl implements TopicService {
 
     @Autowired
     private TopicMapper topicMapper;
@@ -38,20 +39,21 @@ public class TopicService {
     private TopicTagService topicTagService;
 
     @Autowired
-    private TagService tagService;
+    private TagServiceImpl tagService;
 
     @Autowired
     private CollectService collectService;
 
     @Autowired
-    private CommentService commentService;
+    private CommentServiceImpl commentService;
 
     @Autowired
-    private UserService userService;
+    private UserServiceImpl userService;
 
     @Autowired
     private NotificationService notificationService;
 
+    @Override
     public IPage<Map<String, Object>> selectAll(Integer pageNo, String tab) {
         IPage<Map<String, Object>> iPage =
                 new Page<>(pageNo, Integer.parseInt(systemConfigService.selectAllConfig().get("pageSize").toString()));
@@ -60,6 +62,7 @@ public class TopicService {
         return page;
     }
 
+    @Override
     public void selectTags(IPage<Map<String, Object>> page, TopicTagService topicTagService, TagService tagService) {
         page.getRecords()
                 .forEach(
@@ -72,6 +75,7 @@ public class TopicService {
     }
 
     // 查询话题作者其它的话题
+    @Override
     public List<Topic> selectAuthorOtherTopic(long userId, Integer topicId, Integer limit) {
         QueryWrapper<Topic> wrapper = new QueryWrapper<>();
         wrapper.eq("user_id", userId).orderByDesc("in_time");
@@ -85,6 +89,7 @@ public class TopicService {
     }
 
     // 查询用户的话题
+    @Override
     public IPage<Map<String, Object>> selectByUserId(long userId, Integer pageNo, Integer pageSize) {
         IPage<Map<String, Object>> iPage =
                 new Page<>(
@@ -96,6 +101,7 @@ public class TopicService {
     }
 
     // 保存话题
+    @Override
     public Topic insertTopic(String title, String content, String tags, User user, HttpSession session) {
         Topic topic = new Topic();
         topic.setTitle(Jsoup.clean(title, Whitelist.simpleText()));
@@ -123,21 +129,25 @@ public class TopicService {
     }
 
     // 根据id查询话题
+    @Override
     public Topic selectById(Integer id) {
         return topicMapper.selectById(id);
     }
 
-    public int selectByTitle(String title){
+    @Override
+    public int selectByTitle(String title) {
         List<Topic> topics = topicMapper.selectByTitle(title);
         return topics.size();
     }
 
     // 更新话题
+    @Override
     public void update(Topic topic) {
         topicMapper.updateById(topic);
     }
 
     // 更新话题
+    @Override
     public Topic updateTopic(Topic topic, String title, String content, String tags) {
         topic.setTitle(Jsoup.clean(title, Whitelist.simpleText()));
         topic.setContent(content);
@@ -153,6 +163,7 @@ public class TopicService {
     }
 
     // 删除话题
+    @Override
     public void delete(Topic topic, HttpSession session) {
         Integer id = topic.getId();
         // 删除相关通知
@@ -179,6 +190,7 @@ public class TopicService {
     }
 
     // 根据用户id删除帖子
+    @Override
     public void deleteByUserId(long userId) {
         QueryWrapper<Topic> wrapper = new QueryWrapper<>();
         wrapper.lambda().eq(Topic::getUserId, userId);
@@ -187,6 +199,7 @@ public class TopicService {
 
     // ---------------------------- admin ----------------------------
 
+    @Override
     public IPage<Map<String, Object>> selectAllForAdmin(
             Integer pageNo, String startDate, String endDate, String username) {
         IPage<Map<String, Object>> iPage =
@@ -194,6 +207,7 @@ public class TopicService {
         return topicMapper.selectAllForAdmin(iPage, startDate, endDate, username);
     }
 
+    @Override
     public int vote(Topic topic, User user, HttpSession session) {
         String upIds = topic.getUpIds();
         // 将点赞用户id的字符串转成集合

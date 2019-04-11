@@ -2,7 +2,7 @@ package com.carryjey.social.config;
 
 import com.carryjey.social.config.realm.MyCredentialsMatcher;
 import com.carryjey.social.config.realm.MyShiroRealm;
-import com.carryjey.social.service.SystemConfigService;
+import com.carryjey.social.service.inf.SystemConfigService;
 import org.apache.shiro.codec.Base64;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;

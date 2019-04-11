@@ -1,6 +1,6 @@
 package com.carryjey.social.util;
 
-import com.carryjey.social.service.SystemConfigService;
+import com.carryjey.social.service.inf.SystemConfigService;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.safety.Whitelist;

@@ -3,10 +3,9 @@ package com.carryjey.social.controller.api;
 import com.carryjey.social.exception.ApiAssert;
 import com.carryjey.social.model.Code;
 import com.carryjey.social.model.User;
-import com.carryjey.social.service.CodeService;
-import com.carryjey.social.service.ImStatService;
-import com.carryjey.social.service.SystemConfigService;
-import com.carryjey.social.service.UserService;
+import com.carryjey.social.service.inf.CodeService;
+import com.carryjey.social.service.inf.SystemConfigService;
+import com.carryjey.social.service.inf.UserService;
 import com.carryjey.social.util.FileUtil;
 import com.carryjey.social.util.Result;
 import com.carryjey.social.util.StringUtil;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 
 /**
  * @author CarryJey

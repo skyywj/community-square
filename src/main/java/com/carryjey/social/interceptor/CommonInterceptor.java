@@ -1,8 +1,8 @@
 package com.carryjey.social.interceptor;
 
 import com.carryjey.social.model.User;
-import com.carryjey.social.service.SystemConfigService;
-import com.carryjey.social.service.UserService;
+import com.carryjey.social.service.inf.SystemConfigService;
+import com.carryjey.social.service.inf.UserService;
 import com.carryjey.social.util.CookieUtil;
 import com.carryjey.social.util.IpUtil;
 import org.slf4j.Logger;

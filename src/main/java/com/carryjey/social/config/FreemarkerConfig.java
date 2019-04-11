@@ -4,7 +4,7 @@ import com.carryjey.social.directive.NotificationsDirective;
 import com.carryjey.social.directive.OtherTopicDirective;
 import com.carryjey.social.directive.ScoreDirective;
 import com.carryjey.social.directive.TopicListDirective;
-import com.carryjey.social.service.SystemConfigService;
+import com.carryjey.social.service.inf.SystemConfigService;
 import com.carryjey.social.util.BaseModel;
 import freemarker.template.TemplateModelException;
 import org.slf4j.Logger;

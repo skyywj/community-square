@@ -1,6 +1,6 @@
 package com.carryjey.social.util;
 
-import com.carryjey.social.service.SystemConfigService;
+import com.carryjey.social.service.inf.SystemConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;

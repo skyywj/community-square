@@ -2,7 +2,7 @@ package com.carryjey.social.controller.admin;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.carryjey.social.model.Tag;
-import com.carryjey.social.service.TagService;
+import com.carryjey.social.service.inf.TagService;
 import com.carryjey.social.util.FileUtil;
 import com.carryjey.social.util.Result;
 import org.apache.shiro.authz.annotation.RequiresPermissions;

@@ -2,8 +2,8 @@ package com.carryjey.social.controller.front;
 
 import com.carryjey.social.model.Comment;
 import com.carryjey.social.model.Topic;
-import com.carryjey.social.service.CommentService;
-import com.carryjey.social.service.TopicService;
+import com.carryjey.social.service.inf.CommentService;
+import com.carryjey.social.service.inf.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

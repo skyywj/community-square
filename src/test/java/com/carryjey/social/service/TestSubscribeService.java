@@ -1,6 +1,7 @@
 package com.carryjey.social.service;
 
 import com.carryjey.social.model.SubscribeRecord;
+import com.carryjey.social.service.impl.SubscribeService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

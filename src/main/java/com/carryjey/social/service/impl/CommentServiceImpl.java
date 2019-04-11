@@ -1,4 +1,4 @@
-package com.carryjey.social.service;
+package com.carryjey.social.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -7,6 +7,10 @@ import com.carryjey.social.mapper.CommentMapper;
 import com.carryjey.social.model.Comment;
 import com.carryjey.social.model.Topic;
 import com.carryjey.social.model.User;
+import com.carryjey.social.service.inf.CommentService;
+import com.carryjey.social.service.inf.NotificationService;
+import com.carryjey.social.service.inf.SystemConfigService;
+import com.carryjey.social.service.inf.TopicService;
 import com.carryjey.social.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,13 +23,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 /**
  * @author CarryJey
  * @since 2018/12/17
  */
 @Service
 @Transactional
-public class CommentService {
+public class CommentServiceImpl implements CommentService {
 
     @Autowired
     private CommentMapper commentMapper;
@@ -33,16 +38,18 @@ public class CommentService {
     @Autowired
     private TopicService topicService;
 
+
     @Autowired
     private SystemConfigService systemConfigService;
 
     @Autowired
-    private UserService userService;
+    private UserServiceImpl userService;
 
     @Autowired
     private NotificationService notificationService;
 
     // 根据话题id查询评论
+    @Override
     public List<Map<String, Object>> selectByTopicId(Integer topicId) {
         List<Map<String, Object>> maps = commentMapper.selectByTopicId(topicId);
         if (Integer.parseInt(systemConfigService.selectAllConfig().get("commentLayer").toString()) == 1) {
@@ -52,6 +59,7 @@ public class CommentService {
     }
 
     // 删除话题时删除相关的评论
+    @Override
     public void deleteByTopicId(Integer topicId) {
         QueryWrapper<Comment> wrapper = new QueryWrapper<>();
         wrapper.lambda().eq(Comment::getTopicId, topicId);
@@ -59,6 +67,7 @@ public class CommentService {
     }
 
     // 根据用户id删除评论记录
+    @Override
     public void deleteByUserId(long userId) {
         QueryWrapper<Comment> wrapper = new QueryWrapper<>();
         wrapper.lambda().eq(Comment::getUserId, userId);
@@ -66,6 +75,7 @@ public class CommentService {
     }
 
     // 保存评论
+    @Override
     public Comment insert(String content, Topic topic, User user, Integer commentId, HttpSession session) {
         Comment comment = new Comment();
         comment.setCommentId(commentId);
@@ -86,8 +96,8 @@ public class CommentService {
 
         // 增加用户积分
         user.setScore(
-            user.getScore()
-                + Integer.parseInt(systemConfigService.selectAllConfig().get("createCommentScore").toString()));
+                user.getScore()
+                        + Integer.parseInt(systemConfigService.selectAllConfig().get("createCommentScore").toString()));
         userService.update(user);
         if (session != null) {
             session.setAttribute("_user", user);
@@ -111,16 +121,19 @@ public class CommentService {
         return comment;
     }
 
+    @Override
     public Comment selectById(Integer id) {
         return commentMapper.selectById(id);
     }
 
     // 更新评论
+    @Override
     public void update(Comment comment) {
         commentMapper.updateById(comment);
     }
 
     // 对评论点赞
+    @Override
     public int vote(Comment comment, User user, HttpSession session) {
         String upIds = comment.getUpIds();
         // 将点赞用户id的字符串转成集合
@@ -150,6 +163,7 @@ public class CommentService {
     }
 
     // 删除评论
+    @Override
     public void delete(Integer id, HttpSession session) {
         Comment comment = this.selectById(id);
         if (comment != null) {
@@ -160,8 +174,8 @@ public class CommentService {
             // 减去用户积分
             User user = userService.selectByUserId(comment.getUserId());
             user.setScore(
-                user.getScore()
-                    - Integer.parseInt(systemConfigService.selectAllConfig().get("deleteCommentScore").toString()));
+                    user.getScore()
+                            - Integer.parseInt(systemConfigService.selectAllConfig().get("deleteCommentScore").toString()));
             userService.update(user);
             if (session != null) {
                 session.setAttribute("_user", user);
@@ -172,41 +186,43 @@ public class CommentService {
     }
 
     // 查询用户的评论
+    @Override
     public IPage<Map<String, Object>> selectByUserId(long userId, Integer pageNo, Integer pageSize) {
         IPage<Map<String, Object>> iPage =
-            new Page<>(
-                pageNo,
-                pageSize == null
-                    ? Integer.parseInt(systemConfigService.selectAllConfig().get("pageSize").toString())
-                    : pageSize);
+                new Page<>(
+                        pageNo,
+                        pageSize == null
+                                ? Integer.parseInt(systemConfigService.selectAllConfig().get("pageSize").toString())
+                                : pageSize);
         return commentMapper.selectByUserId(iPage, userId);
     }
 
     // 盖楼排序
+    @Override
     public List<Map<String, Object>> sortByLayer(List<Map<String, Object>> comments) {
         List<Map<String, Object>> newComments = new ArrayList<>();
         comments.forEach(
-            comment -> {
-                if (comment.get("commentId") == null) {
-                    newComments.add(comment);
-                } else {
-                    int index = this.findLastIndex(newComments, "commentId", (Integer) comment.get("commentId"));
-                    if (index == -1) {
-                        int upIndex = this.findLastIndex(newComments, "id", (Integer) comment.get("commentId"));
-                        if (upIndex == -1) {
-                            newComments.add(comment);
-                        } else {
-                            Long layer = (Long) newComments.get(upIndex).get("layer") + 1;
-                            comment.put("layer", layer);
-                            newComments.add(upIndex + 1, comment);
-                        }
+                comment -> {
+                    if (comment.get("commentId") == null) {
+                        newComments.add(comment);
                     } else {
-                        Long layer = (Long) newComments.get(index).get("layer");
-                        comment.put("layer", layer);
-                        newComments.add(index + 1, comment);
+                        int index = this.findLastIndex(newComments, "commentId", (Integer) comment.get("commentId"));
+                        if (index == -1) {
+                            int upIndex = this.findLastIndex(newComments, "id", (Integer) comment.get("commentId"));
+                            if (upIndex == -1) {
+                                newComments.add(comment);
+                            } else {
+                                Long layer = (Long) newComments.get(upIndex).get("layer") + 1;
+                                comment.put("layer", layer);
+                                newComments.add(upIndex + 1, comment);
+                            }
+                        } else {
+                            Long layer = (Long) newComments.get(index).get("layer");
+                            comment.put("layer", layer);
+                            newComments.add(index + 1, comment);
+                        }
                     }
-                }
-            });
+                });
         return newComments;
     }
 
@@ -223,10 +239,11 @@ public class CommentService {
 
     // ---------------------------- admin ----------------------------
 
+    @Override
     public IPage<Map<String, Object>> selectAllForAdmin(
-        Integer pageNo, String startDate, String endDate, String username) {
+            Integer pageNo, String startDate, String endDate, String username) {
         IPage<Map<String, Object>> iPage =
-            new Page<>(pageNo, Integer.parseInt((String) systemConfigService.selectAllConfig().get("pageSize")));
+                new Page<>(pageNo, Integer.parseInt((String) systemConfigService.selectAllConfig().get("pageSize")));
         return commentMapper.selectAllForAdmin(iPage, startDate, endDate, username);
     }
 }

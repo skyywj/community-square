@@ -1,4 +1,4 @@
-package com.carryjey.social.service;
+package com.carryjey.social.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -6,6 +6,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.carryjey.social.mapper.TagMapper;
 import com.carryjey.social.model.Tag;
 import com.carryjey.social.model.TopicTag;
+import com.carryjey.social.service.inf.SystemConfigService;
+import com.carryjey.social.service.inf.TagService;
+import com.carryjey.social.service.inf.TopicTagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +25,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @Transactional
-public class TagService {
+public class TagServiceImpl implements TagService {
 
     @Autowired
     private TagMapper tagMapper;
@@ -33,16 +36,19 @@ public class TagService {
     @Autowired
     private SystemConfigService systemConfigService;
 
+    @Override
     public Tag selectById(Integer id) {
         return tagMapper.selectById(id);
     }
 
+    @Override
     public Tag selectByName(String name) {
         QueryWrapper<Tag> wrapper = new QueryWrapper<>();
         wrapper.lambda().eq(Tag::getName, name);
         return tagMapper.selectOne(wrapper);
     }
 
+    @Override
     public List<Tag> selectByIds(List<Integer> ids) {
         QueryWrapper<Tag> wrapper = new QueryWrapper<>();
         wrapper.lambda().in(Tag::getId, ids);
@@ -50,6 +56,7 @@ public class TagService {
     }
 
     // 根据话题查询关联的所有标签
+    @Override
     public List<Tag> selectByTopicId(Integer topicId) {
         List<TopicTag> topicTags = topicTagService.selectByTopicId(topicId);
         List<Integer> tagIds = topicTags.stream().map(TopicTag::getTagId).collect(Collectors.toList());
@@ -59,6 +66,7 @@ public class TagService {
     }
 
     // 将创建话题时填的tag处理并保存
+    @Override
     public List<Tag> insertTag(String newTags) {
         // 使用工具将字符串按逗号分隔成数组
         String[] _tags = StringUtils.commaDelimitedListToStringArray(newTags);
@@ -80,26 +88,29 @@ public class TagService {
     }
 
     // 将标签的话题数都-1
+    @Override
     public void reduceTopicCount(Integer id) {
         List<Tag> tags = this.selectByTopicId(id);
         tags.forEach(
-            tag -> {
-                tag.setTopicCount(tag.getTopicCount() - 1);
-                tagMapper.updateById(tag);
-            });
+                tag -> {
+                    tag.setTopicCount(tag.getTopicCount() - 1);
+                    tagMapper.updateById(tag);
+                });
     }
 
     // 查询标签关联的话题
+    @Override
     public IPage<Map<String, Object>> selectTopicByTagId(Integer tagId, Integer pageNo) {
         IPage<Map<String, Object>> iPage =
-            new Page<>(pageNo, Integer.parseInt(systemConfigService.selectAllConfig().get("pageSize").toString()));
+                new Page<>(pageNo, Integer.parseInt(systemConfigService.selectAllConfig().get("pageSize").toString()));
         return tagMapper.selectTopicByTagId(iPage, tagId);
     }
 
     // 查询标签列表
+    @Override
     public IPage<Tag> selectAll(Integer pageNo, String name) {
         IPage<Tag> iPage =
-            new Page<>(pageNo, Integer.parseInt(systemConfigService.selectAllConfig().get("pageSize").toString()));
+                new Page<>(pageNo, Integer.parseInt(systemConfigService.selectAllConfig().get("pageSize").toString()));
         QueryWrapper<Tag> wrapper = new QueryWrapper<>();
         // 当传进来的name不为null的时候，就根据name查询
         if (!StringUtils.isEmpty(name)) {
@@ -109,11 +120,13 @@ public class TagService {
         return tagMapper.selectPage(iPage, wrapper);
     }
 
+    @Override
     public void update(Tag tag) {
         tagMapper.updateById(tag);
     }
 
     // 如果 topic_tag 表里还有关联的数据，这里删除会报错
+    @Override
     public void delete(Integer id) {
         tagMapper.deleteById(id);
     }
@@ -121,13 +134,14 @@ public class TagService {
     // ---------------------------- admin ----------------------------
 
     //同步标签的话题数
+    @Override
     public void async() {
         List<Tag> tags = tagMapper.selectList(null);
         tags.forEach(
-            tag -> {
-                List<TopicTag> topicTags = topicTagService.selectByTagId(tag.getId());
-                tag.setTopicCount(topicTags.size());
-                this.update(tag);
-            });
+                tag -> {
+                    List<TopicTag> topicTags = topicTagService.selectByTagId(tag.getId());
+                    tag.setTopicCount(topicTags.size());
+                    this.update(tag);
+                });
     }
 }
