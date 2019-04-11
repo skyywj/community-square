@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.carryjey.social.model.Topic;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,8 +22,11 @@ public interface TopicMapper extends BaseMapper<Topic> {
     IPage<Map<String, Object>> selectByUserId(IPage<Map<String, Object>> iPage, @Param("userId") long userId);
 
     IPage<Map<String, Object>> selectAllForAdmin(
-        IPage<Map<String, Object>> iPage,
-        @Param("startDate") String startDate,
-        @Param("endDate") String endDate,
-        @Param("username") String username);
+            IPage<Map<String, Object>> iPage,
+            @Param("startDate") String startDate,
+            @Param("endDate") String endDate,
+            @Param("username") String username);
+
+    @Select("select * from topic where title=#{title}")
+    List<Topic> selectByTitle(@Param("title") String title);
 }

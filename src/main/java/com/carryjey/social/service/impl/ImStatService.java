@@ -1,4 +1,4 @@
-package com.carryjey.social.service;
+package com.carryjey.social.service.impl;
 
 import com.carryjey.social.Dao.ImStatDao;
 import com.carryjey.social.controller.front.BaseController;

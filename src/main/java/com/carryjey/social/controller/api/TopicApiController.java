@@ -3,7 +3,7 @@ package com.carryjey.social.controller.api;
 import com.carryjey.social.exception.ApiAssert;
 import com.carryjey.social.model.Topic;
 import com.carryjey.social.model.User;
-import com.carryjey.social.service.TopicService;
+import com.carryjey.social.service.inf.TopicService;
 import com.carryjey.social.util.Result;
 import com.carryjey.social.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +37,7 @@ public class TopicApiController extends BaseApiController {
         //保存话题
         // 再次将tag转成逗号隔开的字符串
         tags = StringUtils.collectionToCommaDelimitedString(set);
+        ApiAssert.notTrue(topicService.selectByTitle(title) > 0, "该标题已存在，请换一个的标题吧");
         Topic topic = topicService.insertTopic(title, content, tags, getUser(), session);
         return success(topic);
     }

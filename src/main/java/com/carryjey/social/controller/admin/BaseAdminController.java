@@ -2,7 +2,7 @@ package com.carryjey.social.controller.admin;
 
 import com.carryjey.social.controller.api.BaseApiController;
 import com.carryjey.social.model.AdminUser;
-import com.carryjey.social.service.AdminUserService;
+import com.carryjey.social.service.inf.AdminUserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;

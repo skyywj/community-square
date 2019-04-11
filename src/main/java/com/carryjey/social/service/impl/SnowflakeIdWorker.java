@@ -1,4 +1,4 @@
-package com.carryjey.social.service;
+package com.carryjey.social.service.impl;
 
 /**
  * @author CarryJey

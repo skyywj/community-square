@@ -1,7 +1,8 @@
-package com.carryjey.social.service;
+package com.carryjey.social.service.impl;
 
 import com.carryjey.social.CommunitySquareApplication.RedisConfig;
 import com.carryjey.social.exception.ApiAssert;
+import com.carryjey.social.service.inf.RateLimitingService;
 import com.carryjey.social.util.ErrorCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +19,7 @@ import java.util.concurrent.TimeUnit;
  * @since 2019/1/5
  */
 @Service
-public class RateLimitingService {
+public class RateLimitingServiceImpl implements RateLimitingService {
 
     @Autowired
     private StringRedisTemplate redisTemplate;
@@ -89,6 +90,7 @@ public class RateLimitingService {
         }
     }
 
+    @Override
     public void checkLogin(long userId) {
         //登录限制每分钟30次
         String key = getKey(RATE_LIMIT_LOGIN, "per_user_id_", String.valueOf(userId));

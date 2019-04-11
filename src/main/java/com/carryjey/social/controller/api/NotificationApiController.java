@@ -1,6 +1,6 @@
 package com.carryjey.social.controller.api;
 
-import com.carryjey.social.service.NotificationService;
+import com.carryjey.social.service.inf.NotificationService;
 import com.carryjey.social.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

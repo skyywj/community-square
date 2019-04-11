@@ -1,5 +1,7 @@
-package com.carryjey.social.service;
+package com.carryjey.social.service.impl;
 
+import com.carryjey.social.service.inf.EmailService;
+import com.carryjey.social.service.inf.SystemConfigService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +24,13 @@ import java.util.Properties;
  * @since 2018/12/20 DESC:邮箱服务
  */
 @Component
-public class EmailService {
+public class EmailServiceImpl implements EmailService {
 
     @Autowired
     private SystemConfigService systemConfigService;
 
     private Session session;
-    private Logger log = LoggerFactory.getLogger(EmailService.class);
+    private Logger log = LoggerFactory.getLogger(EmailServiceImpl.class);
     private String fromMailAddress = null;
     private String authCode = null;
     private String host = null;
@@ -52,6 +54,7 @@ public class EmailService {
         return this.session;
     }
 
+    @Override
     public boolean sendEmail(String toMmail, String title, String content) {
         // 先判断session是否初始化了，没配置直接失败
         if (this.instance() == null) {

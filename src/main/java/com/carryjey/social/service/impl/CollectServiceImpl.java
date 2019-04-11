@@ -1,4 +1,4 @@
-package com.carryjey.social.service;
+package com.carryjey.social.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -7,6 +7,10 @@ import com.carryjey.social.mapper.CollectMapper;
 import com.carryjey.social.model.Collect;
 import com.carryjey.social.model.Topic;
 import com.carryjey.social.model.User;
+import com.carryjey.social.service.inf.CollectService;
+import com.carryjey.social.service.inf.NotificationService;
+import com.carryjey.social.service.inf.SystemConfigService;
+import com.carryjey.social.service.inf.TopicService;
 import com.carryjey.social.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +26,7 @@ import java.util.Map;
  */
 @Service
 @Transactional
-public class CollectService {
+public class CollectServiceImpl implements CollectService {
 
     @Autowired
     private CollectMapper collectMapper;
@@ -31,10 +35,10 @@ public class CollectService {
     private SystemConfigService systemConfigService;
 
     @Autowired
-    private TagService tagService;
+    private TagServiceImpl tagService;
 
     @Autowired
-    TopicTagService topicTagService;
+    TopicTagServiceImpl topicTagService;
 
     @Autowired
     private TopicService topicService;
@@ -43,6 +47,7 @@ public class CollectService {
     private NotificationService notificationService;
 
     // 查询话题被多少人收藏过
+    @Override
     public List<Collect> selectByTopicId(Integer topicId) {
         QueryWrapper<Collect> wrapper = new QueryWrapper<>();
         wrapper.lambda().eq(Collect::getTopicId, topicId);
@@ -50,6 +55,7 @@ public class CollectService {
     }
 
     // 查询用户是否收藏过某个话题
+    @Override
     public Collect selectByTopicIdAndUserId(Integer topicId, long userId) {
         QueryWrapper<Collect> wrapper = new QueryWrapper<>();
         wrapper.lambda().eq(Collect::getTopicId, topicId).eq(Collect::getUserId, userId);
@@ -61,6 +67,7 @@ public class CollectService {
     }
 
     // 收藏话题
+    @Override
     public Collect insert(Integer topicId, User user) {
         Collect collect = new Collect();
         collect.setTopicId(topicId);
@@ -80,6 +87,7 @@ public class CollectService {
     }
 
     // 删除（取消）收藏
+    @Override
     public void delete(Integer topicId, long userId) {
         QueryWrapper<Collect> wrapper = new QueryWrapper<>();
         wrapper.lambda().eq(Collect::getTopicId, topicId).eq(Collect::getUserId, userId);
@@ -87,12 +95,15 @@ public class CollectService {
     }
 
     // 根据话题id删除收藏记录
+    @Override
     public void deleteByTopicId(Integer topicId) {
         QueryWrapper<Collect> wrapper = new QueryWrapper<>();
         wrapper.lambda().eq(Collect::getTopicId, topicId);
         collectMapper.delete(wrapper);
     }
+
     // 根据用户id删除收藏记录
+    @Override
     public void deleteByUserId(long userId) {
         QueryWrapper<Collect> wrapper = new QueryWrapper<>();
         wrapper.lambda().eq(Collect::getUserId, userId);
@@ -100,6 +111,7 @@ public class CollectService {
     }
 
     // 查询用户收藏的话题数
+    @Override
     public int countByUserId(long userId) {
         QueryWrapper<Collect> wrapper = new QueryWrapper<>();
         wrapper.lambda().eq(Collect::getUserId, userId);
@@ -107,13 +119,14 @@ public class CollectService {
     }
 
     // 查询用户收藏的话题
+    @Override
     public IPage<Map<String, Object>> selectByUserId(long userId, Integer pageNo, Integer pageSize) {
         IPage<Map<String, Object>> iPage =
-            new Page<>(
-                pageNo,
-                pageSize == null
-                    ? Integer.parseInt(systemConfigService.selectAllConfig().get("pageSize").toString())
-                    : pageSize);
+                new Page<>(
+                        pageNo,
+                        pageSize == null
+                                ? Integer.parseInt(systemConfigService.selectAllConfig().get("pageSize").toString())
+                                : pageSize);
         iPage = collectMapper.selectByUserId(iPage, userId);
         topicService.selectTags(iPage, topicTagService, tagService);
         return iPage;

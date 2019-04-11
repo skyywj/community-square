@@ -1,7 +1,7 @@
 package com.carryjey.social.controller.admin;
 
 import com.carryjey.social.model.Permission;
-import com.carryjey.social.service.PermissionService;
+import com.carryjey.social.service.inf.PermissionService;
 import com.carryjey.social.util.Result;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;

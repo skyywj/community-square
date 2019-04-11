@@ -2,7 +2,7 @@ package com.carryjey.social.controller.api;
 
 import com.carryjey.social.exception.ApiAssert;
 import com.carryjey.social.model.Collect;
-import com.carryjey.social.service.CollectService;
+import com.carryjey.social.service.inf.CollectService;
 import com.carryjey.social.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

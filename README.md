@@ -33,4 +33,16 @@
 
 ## [关于接口限频的说明](/information/rate_limit.md)
 
+## 邮箱配置使用
+配置发送邮箱，建议使用163邮箱作为主体邮箱，需要去申请授权码
+
+见地址：https://github.com/skyywj/MessageService/blob/master/Introduce/mail.md
+
+配置数据库
+
+       mail.username   //邮箱地址
+       mail.auth.code   //授权码
+       mail.host        //邮箱的smtp服务器地址，163邮箱为：smtp.163.com
+
+
 

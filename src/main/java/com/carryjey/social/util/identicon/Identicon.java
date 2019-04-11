@@ -1,6 +1,6 @@
 package com.carryjey.social.util.identicon;
 
-import com.carryjey.social.service.SystemConfigService;
+import com.carryjey.social.service.inf.SystemConfigService;
 import com.carryjey.social.util.HashUtil;
 import com.carryjey.social.util.MD5Util;
 import com.carryjey.social.util.StringUtil;

@@ -1,7 +1,7 @@
 package com.carryjey.social.directive;
 
 import com.carryjey.social.model.Topic;
-import com.carryjey.social.service.TopicService;
+import com.carryjey.social.service.inf.TopicService;
 import freemarker.core.Environment;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapperBuilder;
