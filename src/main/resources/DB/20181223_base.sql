@@ -35,6 +35,12 @@ CREATE TABLE `admin_user` (
 LOCK TABLES `admin_user` WRITE;
 /*!40000 ALTER TABLE `admin_user` DISABLE KEYS */;
 
+
+/**
+  用户名：admin
+  密码：123123
+  $2a$10$0F6RXnrQDF8SsOudYk7uhuWlqq3kjPuPm4UGeDCj0gvO8xj2pbZ4y
+ */
 INSERT INTO `admin_user` (`id`, `username`, `password`, `in_time`, `role_id`)
 VALUES
 	(1,'admin','$2a$10$0F6RXnrQDF8SsOudYk7uhuWlqq3kjPuPm4UGeDCj0gvO8xj2pbZ4y','2018-11-11 11:11:11',1);
