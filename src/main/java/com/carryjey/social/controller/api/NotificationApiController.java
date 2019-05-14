@@ -18,6 +18,7 @@ public class NotificationApiController extends BaseApiController {
     @Autowired
     private NotificationService notificationService;
 
+    //查询未读通知数目
     @GetMapping("/notRead")
     public Result notRead() {
         return success(notificationService.countNotRead(getUser().getUserId()));

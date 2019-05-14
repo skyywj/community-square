@@ -67,6 +67,7 @@ public class TopicApiController extends BaseApiController {
         return success();
     }
 
+    //点赞话题
     @GetMapping("/vote")
     public Result vote(Integer id, HttpSession session) {
         User user = getUser();
