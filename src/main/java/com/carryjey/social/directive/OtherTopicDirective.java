@@ -26,6 +26,9 @@ public class OtherTopicDirective implements TemplateDirectiveModel {
     @Autowired
     private TopicService topicService;
 
+    /**
+     * 其他话题更新
+     */
     @Override
     public void execute(
         Environment environment, Map map, TemplateModel[] templateModels, TemplateDirectiveBody templateDirectiveBody)

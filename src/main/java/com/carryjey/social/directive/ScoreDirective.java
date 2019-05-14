@@ -34,6 +34,9 @@ public class ScoreDirective implements TemplateDirectiveModel {
      * 无需在各个controller的各个接口中去重复的向model中添加所需的排行数据，
      * 而是当FreeMarker渲染模板页时遇到相应的宏它可以回到后端去调用相应的方法取到所需的数据
      */
+    /**
+     * 实时渲染积分排行列表
+     */
     @Override
     public void execute(
         Environment environment, Map map, TemplateModel[] templateModels, TemplateDirectiveBody templateDirectiveBody)

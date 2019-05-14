@@ -25,6 +25,9 @@ public class NotificationsDirective implements TemplateDirectiveModel {
     @Autowired
     private NotificationService notificationService;
 
+    /**
+     * 事实通知渲染
+     */
     @Override
     public void execute(
         Environment environment, Map map, TemplateModel[] templateModels, TemplateDirectiveBody templateDirectiveBody)

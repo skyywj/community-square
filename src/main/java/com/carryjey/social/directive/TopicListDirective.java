@@ -25,6 +25,9 @@ public class TopicListDirective implements TemplateDirectiveModel {
     @Autowired
     private TopicService topicService;
 
+    /**
+     * 分页拉取最新话题列表
+     */
     @Override
     public void execute(
         Environment environment, Map map, TemplateModel[] templateModels, TemplateDirectiveBody templateDirectiveBody)
