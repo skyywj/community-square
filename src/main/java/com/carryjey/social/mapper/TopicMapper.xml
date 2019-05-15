@@ -27,14 +27,14 @@
                 and date(t.in_time) &gt;= date_sub(curdate(), interval 7 day)
             </if>
         </where>
-        <if test="tab == 'good'">
-            order by t.in_time desc
+        <if test=" tab == 'all' or tab == 'good' ">
+            order by t.top desc
         </if>
         <if test="tab == 'newest' or tab == 'noanswer'">
             order by t.in_time desc
         </if>
         <if test="tab == 'hot'">
-            order by t.comment_count desc, t.in_time desc
+            order by (t.comment_count + t.collect_count + (t.view / 3))  desc, t.in_time desc
         </if>
     </select>
 
