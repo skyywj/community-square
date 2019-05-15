@@ -70,7 +70,7 @@
             </div>
         </div>
         <div class="panel panel-default">
-            <div class="panel-heading">修改密码</div>
+            <div class="panel-heading">修改邮箱</div>
             <div class="panel-body">
                 <form onsubmit="return;" class="form-horizontal">
                     <div class="form-group">
@@ -80,9 +80,9 @@
                                 <input type="email" name="email" id="email" class="form-control" value="${user.email!}"
                                        placeholder="邮箱"/>
                                 <span class="input-group-btn">
-                  <button type="button" id="sendEmailCode" class="btn btn-default" autocomplete="off"
-                          data-loading-text="发送中...">发送验证码</button>
-                </span>
+                                <button type="button" id="sendEmailCode" class="btn btn-default" autocomplete="off"
+                                        data-loading-text="发送中...">发送验证码</button>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -136,6 +136,13 @@
                         <div class="col-sm-10">
                             <input type="password" name="newPassword" id="newPassword" class="form-control"
                                    placeholder="新密码"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="reNewPassword" class="col-sm-2 control-label">确认密码</label>
+                        <div class="col-sm-10">
+                            <input type="password" name="reNewPassword" id="reNewPassword" class="form-control"
+                                   placeholder="请再次输入新密码"/>
                         </div>
                     </div>
                     <div class="form-group">
@@ -238,12 +245,17 @@
         $("#settings_pwd_btn").click(function () {
             var oldPassword = $("#oldPassword").val();
             var newPassword = $("#newPassword").val();
+            var reNewPassword = $("#reNewPassword").val();
             if (!oldPassword) {
                 toast("请输入旧密码");
                 return;
             }
             if (!newPassword) {
                 toast("请输入新密码");
+                return;
+            }
+            if(newPassword!=reNewPassword){
+                toast("两次输入新密码不一致");
                 return;
             }
             $.post("/api/settings/updatePassword", {
