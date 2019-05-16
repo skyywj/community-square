@@ -28,7 +28,7 @@
             </if>
         </where>
         <if test=" tab == 'all' or tab == 'good' ">
-            order by t.top desc
+            order by ( t.top + t.good ) desc
         </if>
         <if test="tab == 'newest' or tab == 'noanswer'">
             order by t.in_time desc

@@ -24,7 +24,8 @@
               <#if topic.top == true>
                 <span class="label label-primary">置顶</span>
                 <span>•</span>
-              <#elseif topic.good == true>
+              </#if>
+              <#if topic.good == true>
                 <span class="label label-success">精华</span>
                 <span>•</span>
               </#if>
