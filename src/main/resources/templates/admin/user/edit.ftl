@@ -50,7 +50,7 @@
           <div class="form-group">
             <label>个人主页</label>
             <input type="text" id="website" name="website" value="${user.website!}" class="form-control"
-                   placeholder="个人主页"/>
+                   placeholder="请以http开头写全地址"/>
           </div>
           <#if sec.hasPermission("user:refresh_token")>
             <div class="form-group">
