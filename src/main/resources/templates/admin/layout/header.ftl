@@ -2,7 +2,7 @@
     <!-- Logo -->
     <a href="/admin/index" class="logo">
         <span class="logo-mini"><b>Py</b>bbs</span>
-        <span class="logo-lg"><b>CarryJey社区管理</b>后台</span>
+        <span class="logo-lg"><b>星空物语话题广场</b>后台</span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">
